@@ -1,0 +1,15 @@
+.container {
+  width: 50%;
+}
+
+.table-container {
+  overflow-x: auto;
+  white-space: nowrap; /* Mencegah pemisahan teks dalam sel tabel */
+}
+
+table {
+  width: 100%; /* Tabel akan mengisi lebar container */
+  /* Gaya lain sesuai kebutuhan */
+}
+
+

@@ -1,0 +1,57 @@
+<div class="container text-center mt-4">
+    <h1>Update Estimasi</h1>
+    <div class="text-start">
+        <form action="/update-estimasi-claimrejection?_method=PUT" method="POST">
+            <input class="form-control" id="_id" name="_id"  type="text" required value="<%=data._id%>" hidden/>
+            <div class="mb-3">
+                <label for="recipient-name text-start" class="col-form-label">Nomor Polis</label>
+                <input class="form-control" id="nopolis" name="no_polis"  type="text" required value="<%=data.no_polis%>" disabled/>
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name text-start" class="col-form-label">Branch</label>
+                <input class="form-control" id="branch" name="branch" placeholder="-" type="text" readonly value="<%=data.branch%>" disabled/> 
+            </div>
+            <div class="mb-3">
+                <label for="no-klaim" class="col-form-label">Nomor Klaim</label><br />
+                <input class="form-control" id="noklaim" name="no_klaim" placeholder="Masukkan no klaim..." type="text" value="<%= data.no_klaim %>" disabled required />
+                
+            </div>
+            <div class="mb-3">
+                <label for="no-surat-tugas" class="col-form-label">Plat Nomor</label><br />
+                <input class="form-control" id="plat_nomor" name="plat_nomor" placeholder="Masukkan no polisi..." type="text"  value="<%= data.plat_nomor %>" disabled required />
+            </div>
+            <div class="mb-3">
+                <label for="tsi" class="col-form-label">TSI</label><br />
+                <input class="form-control" id="tsi" name="tsi" placeholder="Masukkan tsi..." type="text" required  value="<%= data.tsi %>" disabled/>
+            </div>
+            <div class="mb-3">
+                <% const day = data.dol.getDate(); const month = data.dol.getMonth(); const year = data.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+                <label for="status-keterangan" class="col-form-label">DOL</label><br />
+                <input class="form-control" id="dol" name="dol" placeholder="mm/dd/yyyy" type="text" required value="<%= formattedDate %>" disabled></input>
+            </div>
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Estimasi Awal</label><br />
+                <input class="form-control" id="estimasi_awal" name="estimasi_awal" placeholder="Masukkan estimasi awal..." type="text"  value= "<%=data.estimasi_awal %>"></input>
+            </div>
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Reseve Amt</label><br />
+                <input class="form-control" id="reserve_amt" name="reserve_amt" placeholder="Masukkan reserve amt..." type="text" required  value="<%= data.reserve_amt %>" disabled></input>
+            </div>
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Keterangan</label><br />
+                <input class="form-control" id="reserve_amt" name="reserve_amt" placeholder="Masukkan reserve amt..." type="text" required  value="<%= data.keterangan %>" disabled></input>
+            </div>
+            <input class="form-control" id="status" name="status" placeholder="Masukkan reserve amt..." type="text" value="onprosses pengajuan klaim" hidden disabled></input>
+            
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Status</label><br />
+                <input class="form-control" id="reserve_amt" name="reserve_amt" placeholder="Masukkan reserve amt..." type="text" required  value="<%= data.status %>" disabled></input>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary mb-4" id="tambah">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+

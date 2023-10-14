@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>AdminSite</title>
+  </head>
+  <body>
+    <!-- MODAL  -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/tambah" method="POST">
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Investigator</label>
+                <div class="input-group mb-3">
+                  <select class="form-select" name="investigator" id="inputGroupSelect01" required>
+                    <option value="Perusahaan A">Perusahaan A</option>
+                    <option value="Perusahaan B">Perusahaan B</option>
+                    <option value="Perusahaan C">Perusahaan C</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Cabang</label>
+                <div class="input-group mb-3">
+                  <select class="form-select" name="cabang" id="inputGroupSelect01" required>
+                    <option value="Cabang A">Cabang A</option>
+                    <option value="Cabang B">Cabang B</option>
+                    <option value="Cabang C">Cabang C</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Tanggal Kirim Surat</label>
+                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="date" required />
+              </div>
+              <div class="mb-3">
+                <label for="no-klaim" class="col-form-label">Nomor Klaim</label><br />
+                <input class="form-control" id="noklaim" name="noklaim" placeholder="Masukkan no klaim..." type="text" required />
+              </div>
+              <div class="mb-3">
+                <label for="no-surat-tugas" class="col-form-label">Nomor Surat Tugas</label><br />
+                <input class="form-control" id="nosurattugas" name="surattugas" placeholder="Masukkan no surat tugas..." type="text" required />
+              </div>
+              <div class="mb-3">
+                <label for="tsi" class="col-form-label">TSI</label><br />
+                <input class="form-control" id="tsi" name="tsi" placeholder="Masukkan tsi..." type="text" required />
+              </div>
+              <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Status/Keterangan</label><br />
+                <textarea class="form-control" id="statusketerangan" name="statusketerangan" placeholder="Masukkan keterangan..." type="text" required></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Tambah</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OF MODAL -->
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+      <a href="#" class="brand"><i class="bx bxs-smile icon"></i> AdminSite</a>
+      <ul class="side-menu">
+        <li>
+          <a href="#" class="active"><i class="bx bxs-dashboard icon"></i> Dashboard</a>
+        </li>
+        <li class="divider" data-text="main">Main</li>
+        <li>
+          <a href="/pengajuan-klaim"><i class="bx bxs-inbox icon"></i> Pengajauan Klaim</a>
+        </li>
+        <li>
+          <a href="#"><i class="bx bxs-inbox icon"></i> Claim Closed <i class="bx bx-chevron-right icon-right"></i></a>
+          <ul class="side-dropdown">
+            <li>
+              <a href="/onpresses-claimclosed" class="active">On Prosses</a>
+            </li>
+            <li>
+              <a href="#">Done Surat Tolak</a>
+            </li>
+            <li>
+              <a href="#">Final Closed</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"><i class="bx bxs-inbox icon"></i> Investigasi<i class="bx bx-chevron-right icon-right"></i></a>
+          <ul class="side-dropdown">
+            <li>
+              <a href="#">PT Tujuh Bintangmas <br />Perkasa</a>
+            </li>
+            <li>
+              <a href="#">PT Radita Hutama <br />Internusa</a>
+            </li>
+            <li>
+              <a href="#">PT Raisandi Mentari <br />Semesta</a>
+            </li>
+            <li>
+              <a href="#">PT Cakra Elang <br />Indonesia</a>
+            </li>
+            <li>
+              <a href="#">PT Kanaya Survey <br />Indonesia</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"><i class="bx bxs-inbox icon"></i> Pengajuan SPK <i class="bx bx-chevron-right icon-right"></i></a>
+          <ul class="side-dropdown">
+            <li>
+              <a href="#">SPK Partial</a>
+            </li>
+            <li>
+              <a href="#">SPK CTL</a>
+            </li>
+            <li>
+              <a href="#">SPK ATL</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"><i class="bx bxs-inbox icon"></i> SPGR&LOD <i class="bx bx-chevron-right icon-right"></i></a>
+          <ul class="side-dropdown">
+            <li>
+              <a href="#">On Prosses</a>
+            </li>
+            <li>
+              <a href="#">Done Surat SPGR/LOD</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"><i class="bx bxs-inbox icon"></i> Salvage <i class="bx bx-chevron-right icon-right"></i></a>
+          <ul class="side-dropdown">
+            <li>
+              <a href="#">PT Tujuh Bintangmas <br />Perkasa</a>
+            </li>
+            <li>
+              <a href="#">PT Radita Hutama <br />Internusa</a>
+            </li>
+            <li>
+              <a href="#">PT Raisandi Mentari <br />Semesta</a>
+            </li>
+            <li>
+              <a href="#">PT Cakra Elang <br />Indonesia</a>
+            </li>
+            <li>
+              <a href="#">PT Kanaya Survey <br />Indonesia</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- NAVBAR -->
+    <section id="content">
+      <!-- NAVBAR -->
+      <nav>
+        <i class="bx bx-menu toggle-sidebar"></i>
+
+        <form action="#">
+          <div class="form-group">
+            <input type="text" placeholder="Search..." />
+            <i class="bx bx-search icon"></i>
+          </div>
+        </form>
+        <a href="#" class="nav-link">
+          <i class="bx bxs-bell icon"></i>
+          <span class="badge">5</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="bx bxs-message-square-dots icon"></i>
+          <span class="badge">8</span>
+        </a>
+        <span class="divider"></span>
+        <div class="profile">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="" />
+          <ul class="profile-link">
+            <li>
+              <a href="#"><i class="bx bxs-user-circle icon"></i> Profile</a>
+            </li>
+            <li>
+              <a href="#"><i class="bx bxs-cog"></i> Settings</a>
+            </li>
+            <li>
+              <a href="#"><i class="bx bxs-log-out-circle"></i> Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- NAVBAR -->
+      <!-- MAIN -->
+      <%- include(page)%>
+      <!-- MAIN -->
+    </section>
+    <!-- NAVBAR -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="javascript/script.js"></script>
+  </body>
+</html>

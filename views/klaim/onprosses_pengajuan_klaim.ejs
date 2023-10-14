@@ -1,0 +1,265 @@
+<div class="container-lg mt-4">
+  <div class="card shadow-sm">
+    <h4 class="mt-3 text-center">Details Claim</h4>
+    <hr style="width: 50%" class="mx-auto p-2" />
+    <div class="card-body text-center">
+      <div class="row">
+        <div class="col">
+          <h6 class="card-title">Claimant</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.plat_nomor %></p>
+        </div>
+        <div class="col">
+          <h6 class="card-title">Claim no.</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.no_klaim %></p>
+        </div>
+        <div class="col">
+          <h6 class="card-title">Policy no.</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.no_polis %></p>
+        </div>
+        <div class="col">
+          <h6 class="card-title">Branch</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.branch %></p>
+        </div>
+      </div>
+      <div class="row mt-5 mb-3">
+        <div class="col">
+          <% const day = klaim.dol.getDate(); const month = klaim.dol.getMonth() + 1; const year = klaim.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+          <h6 class="card-title">Date Of Lost</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= formattedDate %></p>
+        </div>
+        <div class="col">
+          <h6 class="card-title">Estimasi</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.estimasi_awal %></p>
+        </div>
+        <div class="col">
+          <h6 class="card-title">Reserve Amt</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.reserve_amt %></p>
+        </div>
+        <div class="col">
+          <h6 class="card-title">Status</h6>
+          <p class="card-text mb-2 text-body-secondary" style="font-size: 1rem"><%= klaim.status %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-lg text-center mt-4">
+  <h4 class="mt-4">Onprosses:</h4>
+  <div class="text-center mt-4">
+    <div class="accordion" id="accordionExample">
+      <div class="btn-group">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Not Claimable</button>
+        </h2>
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Investigasi</button>
+        </h2>
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Pengajuan SPK</button>
+        </h2>
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">PLA&DLA</button>
+        </h2>
+      </div>
+      <form action="/tambah-claim-closed" method="post">
+        <div class="accordion-item">
+          <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="form-floating">
+                <input type="hidden" name="no_polis" value="<%= klaim.no_polis %>" />
+                <input type="hidden" id="branch" name="branch" value="<%= klaim.branch %>" />
+                <input type="hidden" name="no_klaim" value="<%= klaim.no_klaim %>" />
+                <input type="hidden" name="plat_nomor" value="<%= klaim.plat_nomor %>" />
+                <input type="hidden" name="sob" value="<%= klaim.sob %>" />
+                <input type="hidden" name="tsi" value="<%= klaim.tsi %>" />
+                <input type="hidden" name="dol" value="<%= klaim.dol %>" />
+                <input type="hidden" name="estimasi_awal" value="<%= klaim.estimasi_awal %>" />
+                <input type="hidden" name="reserve_amt" value="<%= klaim.reserve_amt %>" />
+                <input type="hidden" name="keterangan" value="<%= klaim.keterangan %>" />
+                <input type="hidden" name="status" value="<%= klaim.status %>" />
+                <input type="hidden" name="status" value="onprosses claim rejection" />
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="keterangan" required></textarea>
+                <label for="floatingTextarea2">Keterangan</label>
+              </div>
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary mt-3" type="submit">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="accordion-item mb-3">
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body text-start">
+            <form action="/tambah-investigasi" method="POST">
+              <input type="hidden" id="nopolis" name="no_polis" value="<%= klaim.no_polis %>" />
+              <input type="hidden" id="branch" name="branch" value="<%= klaim.branch %>" />
+              <input type="hidden" name="no_klaim" value="<%= klaim.no_klaim %>" />
+              <input type="hidden" name="sob" value="<%= klaim.sob %>" />
+              <input type="hidden" name="plat_nomor" value="<%= klaim.plat_nomor %>" />
+              <input type="hidden" name="tsi" value="<%= klaim.tsi %>" />
+              <input type="hidden" name="dol" value="<%= klaim.dol %>" />
+              <input type="hidden" name="estimasi_awal" value="<%= klaim.estimasi_awal %>" />
+              <input type="hidden" name="keterangan" value="<%= klaim.keterangan%>" />
+              <input type="hidden" name="reserve_amt" value="<%= klaim.reserve_amt %>" />
+
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Investigator</label>
+                <div class="input-group mb-3">
+                  <select class="form-select" name="investigator" id="investigator" required>
+                    <option value="PT Tujuh Bintangmas Perkasa">PT Tujuh Bintangmas Perkasa</option>
+                    <option value="PT Radita Hutama Internusa">PT Radita Hutama Internusa</option>
+                    <option value="PT Raisandi Mentari Semesta">PT Raisandi Mentari Semesta</option>
+                    <option value="PT Cakra Elang Indonesia">PT Cakra Elang Indonesia</option>
+                    <option value="PT Kanaya Survey Indonesia">PT Kanaya Survey Indonesia</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Tanggal Kirim Surat</label>
+                <input class="form-control" id="date" name="tanggal_kirim_surat" placeholder="MM/DD/YYY" type="date" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="no-surat-tugas" class="col-form-label">Nomor Surat Tugas</label><br />
+                <input class="form-control" id="nosurattugas" name="nomor_kirim_surat" placeholder="Masukkan no surat tugas..." type="text" required />
+              </div>
+
+              <input class="form-control" id="aging" name="aging" type="number" />
+              <input class="form-control" id="status" name="status" type="text" hidden value="<%=klaim.status%>" />
+              <input class="form-control" id="status" name="status" type="text" hidden value="Investigasi" />
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary mt-3" type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item text-start">
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <form action="/tambah-spk" method="POST">
+            <input type="hidden" id="nopolis" name="no_polis" value="<%= klaim.no_polis %>" />
+            <input type="hidden" id="branch" name="branch" value="<%= klaim.branch %>" />
+            <input type="hidden" name="no_klaim" value="<%= klaim.no_klaim %>" />
+            <input type="hidden" name="sob" value="<%= klaim.sob %>" />
+            <input type="hidden" name="plat_nomor" value="<%= klaim.plat_nomor %>" />
+            <input type="hidden" name="tsi" value="<%= klaim.tsi %>" />
+            <input type="hidden" name="dol" value="<%= klaim.dol %>" />
+            <input type="hidden" name="estimasi_awal" value="<%= klaim.estimasi_awal %>" />
+            <input type="hidden" name="reserve_amt" value="<%= klaim.reserve_amt %>" />
+            <input type="hidden" name="keterangan" value="<%= klaim.keterangan %>" />
+            <input type="hidden" name="status" value="<%= klaim.status %>" />
+            <input type="hidden" name="status" value="Pengajuan SPK" />
+            <div class="accordion-body">
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Tanggal Pengajuan SPK</label>
+                <input class="form-control" id="spk" name="tanggal_kirim_spk" placeholder="MM/DD/YYY" type="date" required />
+              </div>
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary mt-3" type="submit">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="accordion-item text-start">
+        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion text-center" id="accordionExample1">
+            <div class="btn-group">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="radio" data-bs-toggle="collapse" data-bs-target="#collapsePLA/DLAOne" aria-expanded="true" aria-controls="collapsePLA/DLAOne">XOL</button>
+              </h2>
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapsePLA/DLATwo" aria-expanded="false" aria-controls="collapsePLA/DLATwo">FOB</button>
+              </h2>
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapsePLA/DLAThree" aria-expanded="false" aria-controls="collapsePLA/DLAThree">COINS</button>
+              </h2>
+            </div>
+            <div class="accordion-item text-start">
+              <div id="collapsePLA/DLAOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample1">
+                <form action="/tambah-xol" method="POST">
+                  <input type="hidden" id="nopolis" name="no_polis" value="<%= klaim.no_polis %>" />
+                  <input type="hidden" id="branch" name="branch" value="<%= klaim.branch %>" />
+                  <input type="hidden" name="no_klaim" value="<%= klaim.no_klaim %>" />
+                  <input type="hidden" name="sob" value="<%= klaim.sob %>" />
+                  <input type="hidden" name="plat_nomor" value="<%= klaim.plat_nomor %>" />
+                  <input type="hidden" name="tsi" value="<%= klaim.tsi %>" />
+                  <input type="hidden" name="dol" value="<%= klaim.dol %>" />
+                  <input type="hidden" name="estimasi_awal" value="<%= klaim.estimasi_awal %>" />
+                  <input type="hidden" name="reserve_amt" value="<%= klaim.reserve_amt %>" />
+                  <input type="hidden" name="keterangan" value="<%= klaim.keterangan %>" />
+                  <input type="hidden" name="status" value="<%= klaim.status %>" />
+                  <input type="hidden" name="status" value="XOL" />
+                  <div class="accordion-body">
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Tanggal Kirim Reas</label>
+                      <input class="form-control" id="tanggal_kirim_reas" name="tanggal_kirim_reas" placeholder="MM/DD/YYY" type="date" required />
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="accordion-item text-start">
+              <div id="collapsePLA/DLATwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                <form action="/tambah-fob" method="POST">
+                  <input type="hidden" id="nopolis" name="no_polis" value="<%= klaim.no_polis %>" />
+                  <input type="hidden" id="branch" name="branch" value="<%= klaim.branch %>" />
+                  <input type="hidden" name="no_klaim" value="<%= klaim.no_klaim %>" />
+                  <input type="hidden" name="plat_nomor" value="<%= klaim.plat_nomor %>" />
+                  <input type="hidden" name="sob" value="<%= klaim.sob %>" />
+                  <input type="hidden" name="tsi" value="<%= klaim.tsi %>" />
+                  <input type="hidden" name="dol" value="<%= klaim.dol %>" />
+                  <input type="hidden" name="estimasi_awal" value="<%= klaim.estimasi_awal %>" />
+                  <input type="hidden" name="reserve_amt" value="<%= klaim.reserve_amt %>" />
+                  <input type="hidden" name="keterangan" value="<%= klaim.keterangan %>" />
+                  <input type="hidden" name="status" value="<%= klaim.status %>" />
+                  <input type="hidden" name="status" value="FOB" />
+                  <div class="accordion-body">
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Tanggal Kirim Reas</label>
+                      <input class="form-control" id="tanggal_kirim_reas" name="tanggal_kirim_reas" placeholder="MM/DD/YYY" type="date" required />
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="accordion-item text-start">
+              <div id="collapsePLA/DLAThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                <form action="/tambah-coins" method="POST">
+                  <input type="hidden" id="nopolis" name="no_polis" value="<%= klaim.no_polis %>" />
+                  <input type="hidden" id="branch" name="branch" value="<%= klaim.branch %>" />
+                  <input type="hidden" name="no_klaim" value="<%= klaim.no_klaim %>" />
+                  <input type="hidden" name="sob" value="<%= klaim.sob %>" />
+                  <input type="hidden" name="plat_nomor" value="<%= klaim.plat_nomor %>" />
+                  <input type="hidden" name="tsi" value="<%= klaim.tsi %>" />
+                  <input type="hidden" name="dol" value="<%= klaim.dol %>" />
+                  <input type="hidden" name="estimasi_awal" value="<%= klaim.estimasi_awal %>" />
+                  <input type="hidden" name="reserve_amt" value="<%= klaim.reserve_amt %>" />
+                  <input type="hidden" name="keterangan" value="<%= klaim.keterangan %>" />
+                  <input type="hidden" name="status" value="<%= klaim.status %>" />
+                  <input type="hidden" name="status" value="COINS" />
+                  <div class="accordion-body">
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Tanggal Kirim Reas</label>
+                      <input class="form-control" id="tanggal_kirim_reas" name="tanggal_kirim_reas" placeholder="MM/DD/YYY" type="date" required />
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

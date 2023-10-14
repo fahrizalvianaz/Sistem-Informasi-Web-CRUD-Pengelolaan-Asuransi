@@ -1,0 +1,164 @@
+<div class="container-lg mt-4">
+  <h1 class="text-center">Pengajuan SPK</h1>
+  <hr class="mb-5" />
+  <div class="table-responsive">
+    <table class="table table-bordered table-container">
+      <thead>
+        <tr>
+          <th scope="col">Branch</th>
+          <th scope="col">Claimant</th>
+          <th scope="col">Claim No.</th>
+          <th scope="col">Policy No.</th>
+          <th scope="col">DOL</th>
+          <th scope="col">TSI</th>
+          <th scope="col">Estimasi</th>
+          <th scope="col">Reserve Amt</th>
+          <th scope="col">Tgl Peng SPK</th>
+          <th scope="col">Keterangan</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="branch"><%= spk.branch %></td>
+          <td><%= spk.plat_nomor %></td>
+          <td><%= spk.no_klaim %></td>
+          <td id="nopolis"><%= spk.no_polis %></td>
+          <% const day = spk.dol.getDate(); const month = spk.dol.getMonth() + 1; const year = spk.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+          <td><%= formattedDate %></td>
+          <td><%= spk.tsi %></td>
+          <td><%= spk.estimasi_awal %></td>
+          <td><%=spk.reserve_amt %></td>
+
+          <% const day1 = spk.tanggal_kirim_spk.getDate(); const month1 = spk.tanggal_kirim_spk.getMonth() + 1; const year1 = spk.tanggal_kirim_spk.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2,
+          '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
+          <td><%= formattedDate1 %></td>
+          <td><%=spk.keterangan %></td>
+          <td>
+            <% for(let i = 0; i < spk.status.length; i++) { %> <%= i + 1 %>. <%= spk.status[i] %> <br />
+            <% } %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="container text-center mt-4">
+  <h4 class="mt-4">Di ajukan ke :</h4>
+  <div class="text-center mt-4">
+    <div class="accordion" id="accordionExample">
+      <div class="btn-group">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">SPK Partial</button>
+        </h2>
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">SPK CTL</button>
+        </h2>
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="radio" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">SPK ATL</button>
+        </h2>
+      </div>
+      <div class="accordion-item">
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body text-start">
+            <form action="/tambah-spk-partial" method="POST">
+              <input type="hidden" name="no_polis" value="<%= spk.no_polis %>" />
+              <input type="hidden" id="branch" name="branch" value="<%= spk.branch %>" />
+              <input type="hidden" name="no_klaim" value="<%= spk.no_klaim %>" />
+              <input type="hidden" name="plat_nomor" value="<%= spk.plat_nomor %>" />
+              <input type="hidden" name="tsi" value="<%= spk.tsi %>" />
+              <input type="hidden" name="dol" value="<%= spk.dol %>" />
+              <input type="hidden" name="sob" value="<%= spk.sob %>" />
+              <input type="hidden" name="estimasi_awal" value="<%= spk.estimasi_awal %>" />
+              <input type="hidden" name="reserve_amt" value="<%= spk.reserve_amt %>" />
+              <input type="hidden" name="keterangan" value="<%= spk.keterangan %>" />
+              <input type="hidden" name="tanggal_kirim_spk" value="<%= spk.tanggal_kirim_spk %>" />
+              <input type="hidden" name="nett_klaim" value="Rp 0" />
+              <% for( let i = 0; i < spk.status.length; i++ ) { %>
+              <input class="form-control" id="status" name="status" type="text" hidden value="<%= spk.status[i] %>" />
+              <% } %>
+              <input type="hidden" name="status" value="Pengajuan SPK Partial" />
+              <div class="accordion-body">
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Tanggal Terbit SPK Partial</label>
+                  <input class="form-control" id="spk" name="tanggal_kirim_spk_partial" placeholder="MM/DD/YYY" type="date" required />
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body text-start">
+            <form action="/tambah-spk-ctl" method="POST">
+              <input type="hidden" name="no_polis" value="<%= spk.no_polis %>" />
+              <input type="hidden" id="branch" name="branch" value="<%= spk.branch %>" />
+              <input type="hidden" name="no_klaim" value="<%= spk.no_klaim %>" />
+              <input type="hidden" name="plat_nomor" value="<%= spk.plat_nomor %>" />
+              <input type="hidden" name="tsi" value="<%= spk.tsi %>" />
+              <input type="hidden" name="dol" value="<%= spk.dol %>" />
+              <input type="hidden" name="sob" value="<%= spk.sob %>" />
+              <input type="hidden" name="estimasi_awal" value="<%= spk.estimasi_awal %>" />
+              <input type="hidden" name="reserve_amt" value="<%= spk.reserve_amt %>" />
+              <input type="hidden" name="keterangan" value="<%= spk.keterangan %>" />
+              <input type="hidden" name="tanggal_kirim_spk" value="<%= spk.tanggal_kirim_spk %>" />
+              <input type="hidden" name="nett_klaim" value="Rp 0" />
+              <input type="hidden" name="nilai_penggantian" value="Rp 0" />
+              <input type="hidden" name="nilai_salvage" value="Rp 0" />
+              <% for( let i = 0; i < spk.status.length; i++ ) { %>
+              <input class="form-control" id="status" name="status" type="text" hidden value="<%= spk.status[i] %>" />
+              <% } %>
+              <input type="hidden" name="status" value="Pengajuan SPK CTL" />
+              <div class="accordion-body">
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Tanggal Terbit SPK CTL</label>
+                  <input class="form-control" id="spk" name="tanggal_kirim_spk_ctl" placeholder="MM/DD/YYY" type="date" required />
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body text-start">
+            <form action="/tambah-spk-atl" method="POST">
+              <input type="hidden" name="no_polis" value="<%= spk.no_polis %>" />
+              <input type="hidden" id="branch" name="branch" value="<%= spk.branch %>" />
+              <input type="hidden" name="no_klaim" value="<%= spk.no_klaim %>" />
+              <input type="hidden" name="plat_nomor" value="<%= spk.plat_nomor %>" />
+              <input type="hidden" name="tsi" value="<%= spk.tsi %>" />
+              <input type="hidden" name="dol" value="<%= spk.dol %>" />
+              <input type="hidden" name="sob" value="<%= spk.sob %>" />
+              <input type="hidden" name="estimasi_awal" value="<%= spk.estimasi_awal %>" />
+              <input type="hidden" name="reserve_amt" value="<%= spk.reserve_amt %>" />
+              <input type="hidden" name="keterangan" value="<%= spk.keterangan %>" />
+              <input type="hidden" name="tanggal_kirim_spk" value="<%= spk.tanggal_kirim_spk %>" />
+              <input type="hidden" name="nilai_penggantian" value="Rp 0" />
+              <% for( let i = 0; i < spk.status.length; i++ ) { %>
+              <input class="form-control" id="status" name="status" type="text" hidden value="<%= spk.status[i] %>" />
+              <% } %>
+              <input type="hidden" name="status" value="Pengajuan SPK ATL" />
+              <div class="accordion-body">
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Tanggal Terbit SPK ATL</label>
+                  <input class="form-control" id="spk" name="tanggal_kirim_spk_atl" placeholder="MM/DD/YYY" type="date" required />
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

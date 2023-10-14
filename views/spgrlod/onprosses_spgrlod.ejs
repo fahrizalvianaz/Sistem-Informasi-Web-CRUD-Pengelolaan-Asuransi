@@ -1,0 +1,87 @@
+<h1 class="title">SPGR & LOD <span class="badge bg-secondary"><%= count %></span></h1>
+<ul class="breadcrumbs">
+  <li><a href="#">SPGR & LOD</a></li>
+  <li class="divider">/</li>
+  <li><a href="#" class="active">Onprosses</a></li>
+</ul>
+<% let i = 1; if (msg.length !== 0) { %>
+<div class="alert alert-success" role="alert"><%= msg %></div>
+<% } %>
+<div class="info-data table-responsive">
+  <table class="table table-bordered table-container">
+    <thead class="table-primary">
+      <tr class="text-center">
+        <th scope="col">No</th>
+        <th scope="col">Claim No.</th>
+        <th scope="col">Claimant</th>
+        <th scope="col">SOB</th>
+        <th scope="col">DOL</th>
+        <th scope="col">TSI</th>
+        <th scope="col">Reserve amt</th>
+        <th scope="col">Estimasi</th>
+        <th scope="col">Nilai Penggantian</th>
+        <th scope="col">Keterangan</th>
+        <th scope="col">Status</th>
+        <th scope="col">x</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%  data.forEach(element => { %>
+      <tr>
+        <td><%=i%></td>
+        <td><%=element.no_klaim%></td>
+        <td><%= element.plat_nomor %></td>
+        <td><%= element.sob %></td>
+        <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+        <td><%= formattedDate %></td>
+        <td><%= element.tsi %></td>
+        <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %>
+        <td><%= element.reserve_amt %></td>
+        <% const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %>
+        <td><%=element.estimasi_awal %></td>
+        <td><%=element.nilai_penggantian%>
+        </td>
+        </td>
+        <td>
+          <%= element.keterangan %>
+        </td>
+        <td>
+          <a href="#" data-bs-toggle="tooltip" data-bs-title="<%for( let i=0; i < element.status.length; i++){%> <%=i + 1%>. <%=element.status[i] %> <% if(i < element.status.length - 1) { %> => <%} };%> " data-bs-placement="right">
+            <%= element.status[element.status.length - 1] %>
+          </a>
+        </td>
+        <td class="text-center">
+          <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-trash"></i>
+          </a>
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/delete-claim-rejection?_method=DELETE" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus <%=element.no_klaim %>?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan_hapus" style="height: 100px" required></textarea>
+                      <label for="floatingTextarea2">Alasan dihapus...</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% i++;}); %>
+    </tbody>
+    
+  </table>
+</div>

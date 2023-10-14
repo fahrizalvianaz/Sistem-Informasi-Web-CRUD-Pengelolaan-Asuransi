@@ -1,0 +1,157 @@
+<h1 class="title">Claim Rejection <span class="badge bg-secondary"><%= count %></span></h1>
+<ul class="breadcrumbs">
+  <li><a href="#">Claim Rejection</a></li>
+  <li class="divider">/</li>
+  <li><a href="#" class="active">Onprosses</a></li>
+</ul>
+<% if (msg.length !== 0) { %>
+<div class="alert alert-success" role="alert"><%= msg %></div>
+<% } %>
+<div class="info-data table-responsive">
+  <table class="table table-bordered table-container">
+    <thead class="table-primary">
+      <tr class="text-center">
+        <th scope="col">Branch</th>
+        <th scope="col">Claimant</th>
+        <th scope="col">Claim No.</th>
+        <th scope="col">Policy No.</th>
+        <th scope="col">TSI</th>
+        <th scope="col">Estimasi</th>
+        <th scope="col">Reserve amt</th>
+        <th scope="col">Status</th>
+        <th scope="col">x</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let totalReserveAmt = 0 %> <% claimclosed.forEach(element => { %>
+      <tr>
+        <td id="branch"><%= element.branch %></td>
+        <td><%= element.plat_nomor %></td>
+        <td>
+          <a href="#staticBackdrop<%=element._id%>" data-bs-toggle="modal"><%= element.no_klaim %> <i class="bi bi-box-arrow-in-down-right"></i></a>
+          <!-- Modal -->
+          <div class="modal fade" id="staticBackdrop<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/done-surat-tolak" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input class="form-control" id="branch" name="branch" hidden value="<%= element.branch %>" />
+                    <input class="form-control" id="no_klaim" name="no_klaim" hidden value="<%= element.no_klaim %>" />
+                    <input class="form-control" id="no_polis" name="no_polis" hidden value="<%= element.no_polis %>" />
+                    <input class="form-control" id="plat_nomor" name="plat_nomor" hidden value="<%= element.plat_nomor %>" />
+                    <input class="form-control" id="tsi" name="tsi" hidden value="<%= element.tsi %>" />
+                    <input class="form-control" id="dol" name="dol" hidden value="<%= element.dol %>" />
+                    <input class="form-control" id="estimasi_awal" name="estimasi_awal" hidden value="<%= element.estimasi_awal %>" />
+                    <input class="form-control" id="reserve_amt" name="reserve_amt" hidden value="<%= element.reserve_amt %>" />
+                    <input class="form-control" id="keterangan" name="keterangan" hidden value="<%= element.keterangan %>" />
+                    <% for( let i = 0; i < element.status.length; i++ ) { %>
+                    <input class="form-control" id="status" name="status" hidden value="<%= element.status[i] %>" />
+                    <% } %>
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Tgl Terima Surat Tolak</label><br />
+                    <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" placeholder="mm/dd/yyyy" type="date" required />
+                    <input class="form-control" id="ddc" name="ddc" placeholder="mm/dd/yyyy" value="" hidden />
+                    <label for="status" class="col-form-label">Status</label><br />
+                    <div class="input-group mb-3">
+                      <select class="form-select" name="status" id="status" required>
+                        <option value="Tunggu 30 hari">Tunggu 30 hari</option>
+                        <option value="Ajukan Banding">Ajukan Banding</option>
+                        <option value="Exgratia">Exgratia</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td id="nopolis"><%= element.no_polis %></td>
+        <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+        <td hidden><%= formattedDate %></td>
+        <td><%= element.tsi %></td>
+        <td id="estimasiAwal">
+          <a href="#exampleModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i> </a> <%=
+          element.estimasi_awal %>
+           <!-- Modal -->
+          <div class="modal fade" id="exampleModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-estimasi-claim-rejection?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
+                    <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        </td>
+        <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %> <% totalReserveAmt = totalReserveAmt + numericValue %>
+        <td><%= element.reserve_amt %></td>
+        <td>
+          <a href="#" data-bs-toggle="tooltip" data-bs-title="<%for( let i=0; i < element.status.length; i++){%> <%=i + 1%>. <%=element.status[i] %> <% if(i < element.status.length - 1) { %> => <%} };%> " data-bs-placement="right">
+            <%= element.status[element.status.length - 1] %>
+          </a>
+        </td>
+        <td class="text-center">
+          <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-trash"></i>
+          </a>
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/delete-claim-rejection?_method=DELETE" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus <%=element.no_klaim %>?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan_hapus" style="height: 100px" required></textarea>
+                      <label for="floatingTextarea2">Alasan dihapus...</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+    <tfoot class="table-warning">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Rp <%= totalReserveAmt.toLocaleString() %></td>
+      <td></td>
+      <td></td>
+    </tfoot>
+  </table>
+</div>

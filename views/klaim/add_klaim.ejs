@@ -1,0 +1,86 @@
+
+<div class="container text-center mt-4">
+    <h1>Tambah Pengajuan Klaim</h1>
+    <div class="text-start">
+        <% if(typeof errors != "undefined") {%>
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <ul>
+                    <% errors.forEach(er => {%>
+                        <li><%= er.msg %></li>
+                    <%}) %>
+                </ul>
+            </div>
+        <% }; %>
+        <form action="/tambah" method="POST">
+            <div class="mb-3">
+                <label for="recipient-name text-start" class="col-form-label">Nomor Polis</label>
+                <input class="form-control" id="nopolis" name="no_polis" placeholder="Masukkan no polis..." type="text" required <% if(typeof errors != "undefined") {%> value="<%= value.no_polis %>" <% } %>/>
+                <div id="error-message1" style="color: red;"></div>
+            </div>
+            <div class="mb-3">
+                <label for="recipient-name text-start" class="col-form-label">Branch</label>
+                <input class="form-control" id="branch" name="branch" placeholder="-" type="text" readonly <% if(typeof errors != "undefined") {%> value="<%= value.branch %>" <% } %>/>
+                <div id="error-message1" style="color: red;"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="no-klaim" class="col-form-label">Nomor Klaim</label><br />
+                <input class="form-control" id="noklaim" name="no_klaim" placeholder="Masukkan no klaim..." type="text" <% if(typeof errors != "undefined") {%> value="<%= value.no_klaim %>" <% } %> required />
+                <div id="error-message2" style="color: red;"></div>
+            </div>
+            <div class="mb-3">
+                <label for="sob" class="col-form-label">SOB</label>
+                <div class="input-group mb-3">
+                  <select class="form-select" name="sob" id="sob" required>
+                    <option value="PTSKBF">PT Sunindo Kookmin Best Finance</option>
+                    <option value="MF">Mega Finance</option>
+                    <option value="BCAMF">BCA Multi Finance</option>
+                    <option value="BRIMI">BRI Multifinance Indonesia</option>
+                    <option value="PTFIF">PT Federal International Finance</option>
+                    <option value="AF">Adira Finance</option>
+                    <option value="SOF">Summit Oto Finance</option>
+                    <option value="MUF">Mandiri Utama Finance</option>
+                    <option value="MTF">Mandiri Tunas Finance</option>
+                    <option value="PTMCF">PT Mega Central Finance</option>
+                    <option value="MAF">Mega Auto Finance</option>
+                    <option value="OM">Oto Multiartha</option>
+                    <option value="PTITCMF">PT Internusa Tribuana Citra Multi Finance</option>
+                    <option value="PTBFTBK">PT Buana Finance TBK</option>
+                    <option value="PTBNIMF">PT BNI Multi Finance</option>
+                    <option value="PTOM">PT Oto Multiartha</option>
+                    <option value="ADMF">Adira Dinamika Multi Finance</option>
+                  </select>
+                </div>
+              </div>
+            <div class="mb-3">
+                <label for="no-surat-tugas" class="col-form-label">Plat Nomor</label><br />
+                <input class="form-control" id="plat_nomor" name="plat_nomor" placeholder="Masukkan no polisi..." type="text" <% if(typeof errors != "undefined") {%> value="<%= value.plat_nomor %>" <% } %>required />
+            </div>
+            <div class="mb-3">
+                <label for="tsi" class="col-form-label">TSI</label><br />
+                <input class="form-control" id="tsi" name="tsi" placeholder="Masukkan tsi..." type="text" required <% if(typeof errors != "undefined") {%> value="<%= value.tsi %>" <% } %>/>
+                <div id="error-message3" style="color: red;"></div>
+            </div>
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">DOL</label><br />
+                <input class="form-control" id="dol" name="dol" placeholder="mm/dd/yyyy" type="date" required <% if(typeof errors != "undefined") {%> value="<%= value.dol %>" <% } %>></input>
+            </div>
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Estimasi Awal</label><br />
+                <input class="form-control" id="estimasi_awal" name="estimasi_awal" placeholder="Masukkan estimasi awal..." type="text" <% if(typeof errors != "undefined") {%> value="<%= value.estimasi_awal %>" <% } %>></input>
+            </div>
+            <div class="mb-3">
+                <label for="status-keterangan" class="col-form-label">Reseve Amt</label><br />
+                <input class="form-control" id="reserve_amt" name="reserve_amt" placeholder="Masukkan reserve amt..." type="text" required <% if(typeof errors != "undefined") {%> value="<%= value.reserve_amt %>" <% } %>></input>
+                <input class="form-control" id="keterangan" name="keterangan"  type="text" hidden></input>
+            </div>
+            
+            <input class="form-control" id="status" name="status" type="text" value="onprosses pengajuan klaim" hidden></input>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary mb-4" id="tambah">Tambah</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
