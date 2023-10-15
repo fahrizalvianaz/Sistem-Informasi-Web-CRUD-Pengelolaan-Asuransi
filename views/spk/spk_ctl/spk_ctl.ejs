@@ -1,6 +1,6 @@
-<h1 class="title">SPK Partial <span class="badge bg-secondary"><%= count %></span></h1>
+<h1 class="title">SPK CTL <span class="badge bg-secondary"><%= count %></span></h1>
 <ul class="breadcrumbs">
-  <li><a href="#">SPK Partial</a></li>
+  <li><a href="#">SPK CTL</a></li>
   <li class="divider">/</li>
   <li><a href="#" class="active">Onprosses</a></li>
 </ul>
@@ -55,6 +55,7 @@
                     <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
                     <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

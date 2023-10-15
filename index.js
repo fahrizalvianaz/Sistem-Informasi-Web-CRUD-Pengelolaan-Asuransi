@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
 import "./utils/db.js";
-import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod } from "./model/onprosses_pengajuan_klaim.js";
+import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod, doneSpgrPayment } from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
 import session from "express-session";
@@ -210,6 +210,18 @@ app.get("/spk/:_id", async (req, res) => {
   });
 });
 
+// Halaman onprosses spgrlod
+app.get("/spgrlod/done", async (req, res) => {
+  const data = await doneSpgrPayment.find();
+  const count = await doneSpgrPayment.countDocuments();
+  res.render("spgrlod/done_spgrlod_payment", {
+    layout: "layouts/main_layout",
+    data,
+    count,
+    msg: req.flash("msg"),
+  });
+});
+
 // Update klaim
 app.put("/update-estimasi-klaim", async (req, res) => {
   await pengajuanKlaim
@@ -381,6 +393,38 @@ app.put("/update-estimasi-investigasi", async (req, res) => {
     });
 });
 
+// Update nilai estimasi spk ctl
+app.put("/update-estimasi-spk-ctl", async (req, res) => {
+  await spgrlod
+    .updateOne(
+      {
+        no_klaim: req.body.no_klaim,
+      },
+      {
+        $set: {
+          estimasi_awal: req.body.estimasi_awal,
+        },
+      }
+    )
+    .then(function () {
+      pengajuanSPKCtl
+        .updateOne(
+          {
+            no_klaim: req.body.no_klaim,
+          },
+          {
+            $set: {
+              estimasi_awal: req.body.estimasi_awal,
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/klaim/spk-ctl");
+        });
+    });
+});
+
 // Update nilai penggantian spk ctl
 app.put("/update-penggantian-spk-ctl", async (req, res) => {
   await spgrlod
@@ -413,7 +457,7 @@ app.put("/update-penggantian-spk-ctl", async (req, res) => {
     });
 });
 
-// Update nilai penggantian spk ctl
+// Update nilai salvage spk ctl
 app.put("/update-salvage-spk-ctl", async (req, res) => {
   await spgrlod
     .updateOne(
@@ -445,6 +489,133 @@ app.put("/update-salvage-spk-ctl", async (req, res) => {
     });
 });
 
+// Update nilai estimasi spk atl
+app.put("/update-estimasi-spk-atl", async (req, res) => {
+  await spgrlod
+    .updateOne(
+      {
+        no_klaim: req.body.no_klaim,
+      },
+      {
+        $set: {
+          estimasi_awal: req.body.estimasi_awal,
+        },
+      }
+    )
+    .then(function () {
+      pengajuanSPKAtl
+        .updateOne(
+          {
+            no_klaim: req.body.no_klaim,
+          },
+          {
+            $set: {
+              estimasi_awal: req.body.estimasi_awal,
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/klaim/spk-atl");
+        });
+    });
+});
+
+// Update nilai penggantian spk atl
+app.put("/update-penggantian-spk-atl", async (req, res) => {
+  await spgrlod
+    .updateOne(
+      {
+        no_klaim: req.body.no_klaim,
+      },
+      {
+        $set: {
+          nilai_penggantian: req.body.nilai_penggantian,
+        },
+      }
+    )
+    .then(function () {
+      pengajuanSPKAtl
+        .updateOne(
+          {
+            no_klaim: req.body.no_klaim,
+          },
+          {
+            $set: {
+              nilai_penggantian: req.body.nilai_penggantian,
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/klaim/spk-atl");
+        });
+    });
+});
+
+// Update keterangan spgrlod
+app.put("/update-keterangan-spgrlod", async (req, res) => {
+  if (req.body.status === "Pengajuan SPK CTL") {
+    await spgrlod
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            keterangan: req.body.keterangan,
+          },
+        }
+      )
+      .then(function () {
+        pengajuanSPKCtl
+          .updateOne(
+            {
+              no_klaim: req.body.no_klaim,
+            },
+            {
+              $set: {
+                keterangan: req.body.keterangan,
+              },
+            }
+          )
+          .then((result) => {
+            req.flash("msg", "Data berhasil diubah !");
+            res.redirect("/spgrlod/onprosses");
+          });
+      });
+  } else {
+    await spgrlod
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            keterangan: req.body.keterangan,
+          },
+        }
+      )
+      .then(function () {
+        pengajuanSPKAtl
+          .updateOne(
+            {
+              no_klaim: req.body.no_klaim,
+            },
+            {
+              $set: {
+                keterangan: req.body.keterangan,
+              },
+            }
+          )
+          .then((result) => {
+            req.flash("msg", "Data berhasil diubah !");
+            res.redirect("/spgrlod/onprosses");
+          });
+      });
+  }
+});
+
 // POST
 app.post(
   "/tambah",
@@ -454,7 +625,10 @@ app.post(
       const duplikat2 = await claimClosed.findOne({ no_klaim: value });
       const duplikat3 = await investigasi.findOne({ no_klaim: value });
       const duplikat4 = await pengajuanSPK.findOne({ no_klaim: value });
-      if (duplikat1 || duplikat2 || duplikat3 || duplikat4) {
+      const duplikat5 = await pengajuanSPKPartial.findOne({ no_klaim: value });
+      const duplikat6 = await pengajuanSPKCtl.findOne({ no_klaim: value });
+      const duplikat7 = await pengajuanSPKAtl.findOne({ no_klaim: value });
+      if (duplikat1 || duplikat2 || duplikat3 || duplikat4 || duplikat5 || duplikat6 || duplikat7) {
         throw new Error("No klaim sudah digunakan ");
       } else if (value.length < 15) {
         throw new Error("No klaim kurang dari 14 karakter");

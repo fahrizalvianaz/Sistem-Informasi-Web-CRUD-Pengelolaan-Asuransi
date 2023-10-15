@@ -560,4 +560,97 @@ const spgrlod = mongoose.model("spgrlod", {
   },
 });
 
-export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl };
+
+const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
+  no_polis: {
+    type: String,
+    required: true,
+  },
+  branch: {
+    type: String,
+    required: true,
+  },
+  no_klaim: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  sob: {
+    type: String,
+    required: true,
+  },
+  plat_nomor: {
+    type: String,
+    required: true,
+  },
+  tsi: {
+    type: String,
+    required: true,
+  },
+  dol: {
+    type: Date,
+    required: true,
+  },
+  estimasi_awal: {
+    type: String,
+    required: false,
+  },
+  reserve_amt: {
+    type: String,
+    required: true,
+  },
+  tanggal_kirim_spk: {
+    type: Date,
+    required: true,
+  },
+  tanggal_kirim_spk_ctl: {
+    type: Date,
+    required: false,
+  },
+  tanggal_kirim_spk_atl: {
+    type: Date,
+    required: false,
+  },
+  tanggal_kirim_spgr: {
+    type: Date,
+    required: true,
+  },
+  tanggal_feedback: {
+    type: Date,
+    required: false,
+  },
+  tanggal_payment: {
+    type: Date,
+    required: false,
+  },
+  pdv: {
+    type: String,
+    required: false,
+  },
+  status_payment: {
+    type: String,
+    required: false,
+  },
+  nilai_penggantian: {
+    type: String,
+    required: false,
+  },
+  nilai_salvage: {
+    type: String,
+    required: false,
+  },
+  nett_klaim: {
+    type: String,
+    required: false,
+  },
+  status: {
+    type: [String],
+    require: true,
+  },
+  keterangan: {
+    type: String,
+    required: false,
+  },
+});
+
+export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment };

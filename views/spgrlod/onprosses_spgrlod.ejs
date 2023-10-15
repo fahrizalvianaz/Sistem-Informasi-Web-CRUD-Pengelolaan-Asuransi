@@ -29,7 +29,29 @@
       <%  data.forEach(element => { %>
       <tr>
         <td><%=i%></td>
-        <td><%=element.no_klaim%></td>
+        <td> <a href="#spgrModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+          <%=element.no_klaim%> </a>
+          <!-- Modal -->
+          <form action="/tambah-done-spgrlod" method="post">
+            <div class="modal fade" id="spgrModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </td>
         <td><%= element.plat_nomor %></td>
         <td><%= element.sob %></td>
         <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
@@ -41,9 +63,38 @@
         <td><%=element.estimasi_awal %></td>
         <td><%=element.nilai_penggantian%>
         </td>
-        </td>
         <td>
+          <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+          </a>
           <%= element.keterangan %>
+          <!-- Modal -->
+          <div class="modal fade" id="ketModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-keterangan-spgrlod?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan" style="height: 100px" required><%= element.keterangan %></textarea>
+                      <label for="floatingTextarea2">Tambah keterangan</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
         </td>
         <td>
           <a href="#" data-bs-toggle="tooltip" data-bs-title="<%for( let i=0; i < element.status.length; i++){%> <%=i + 1%>. <%=element.status[i] %> <% if(i < element.status.length - 1) { %> => <%} };%> " data-bs-placement="right">

@@ -44,7 +44,7 @@
           <div class="modal fade" id="exampleModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-estimasi-spgrlod?_method=PUT" method="post">
+                <form action="/update-estimasi-spk-atl?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -53,6 +53,7 @@
                     <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
                     <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -70,15 +71,16 @@
           <div class="modal fade" id="penggantianModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-penggantian-spgrlod?_method=PUT" method="post">
+                <form action="/update-penggantian-spk-atl?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Nett Klaim</label><br />
-                    <input class="form-control estimasi_awal" id="nett_klaim" name="nett_klaim" value="<%= element.nett_klaim%>" />
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Nilai Penggantian</label><br />
+                    <input class="form-control estimasi_awal" id="nilai_penggantian" name="nilai_penggantian" value="<%= element.nilai_penggantian%>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
