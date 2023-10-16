@@ -92,9 +92,12 @@ const claimClosed = mongoose.model("Onprosses_claim_closed", {
   },
   keterangan: {
     type: String,
+    required: false,
+  },
+  keterangan_claimclosed: {
+    type: String,
     required: true,
   },
-
   investigator: {
     type: String,
   },
@@ -458,6 +461,10 @@ const doneSuratTolak = mongoose.model("Done_surat_tolak", {
   },
   keterangan: {
     type: String,
+    required: false,
+  },
+  keterangan_claimclosed: {
+    type: String,
     required: true,
   },
   tanggal_terima_surat_tolak: {
@@ -613,6 +620,10 @@ const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
   },
   tanggal_kirim_spgr: {
     type: Date,
+    required: true,
+  },
+  no_surat_spgr: {
+    type: String,
     required: true,
   },
   tanggal_feedback: {

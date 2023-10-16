@@ -427,6 +427,7 @@ app.put("/update-estimasi-spk-ctl", async (req, res) => {
 
 // Update nilai penggantian spk ctl
 app.put("/update-penggantian-spk-ctl", async (req, res) => {
+  const nettklaim = parseInt(req.body.nilai_penggantian.replace(/[^0-9]/g, "")) - parseInt(req.body.nilai_salvage.replace(/[^0-9]/g, ""));
   await spgrlod
     .updateOne(
       {
@@ -435,6 +436,7 @@ app.put("/update-penggantian-spk-ctl", async (req, res) => {
       {
         $set: {
           nilai_penggantian: req.body.nilai_penggantian,
+          nett_klaim: nettklaim.toLocaleString(),
         },
       }
     )
@@ -447,6 +449,7 @@ app.put("/update-penggantian-spk-ctl", async (req, res) => {
           {
             $set: {
               nilai_penggantian: req.body.nilai_penggantian,
+              nett_klaim: nettklaim.toLocaleString(),
             },
           }
         )
@@ -459,6 +462,7 @@ app.put("/update-penggantian-spk-ctl", async (req, res) => {
 
 // Update nilai salvage spk ctl
 app.put("/update-salvage-spk-ctl", async (req, res) => {
+  const nettklaim = parseInt(req.body.nilai_penggantian.replace(/[^0-9]/g, "")) - parseInt(req.body.nilai_salvage.replace(/[^0-9]/g, ""));
   await spgrlod
     .updateOne(
       {
@@ -467,6 +471,7 @@ app.put("/update-salvage-spk-ctl", async (req, res) => {
       {
         $set: {
           nilai_salvage: req.body.nilai_salvage,
+          nett_klaim: nettklaim.toLocaleString(),
         },
       }
     )
@@ -479,6 +484,7 @@ app.put("/update-salvage-spk-ctl", async (req, res) => {
           {
             $set: {
               nilai_salvage: req.body.nilai_salvage,
+              nett_klaim: nettklaim.toLocaleString(),
             },
           }
         )
@@ -784,6 +790,21 @@ app.post("/done-surat-tolak", async (req, res) => {
       claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
         res.redirect("/done-surat-tolak");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.post("/tambah-done-spgrlod", async (req, res) => {
+  // res.send(req.body);
+  doneSpgrPayment
+    .insertMany(req.body)
+    .then(function () {
+      spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil ditambahkan ke pengajuan done SPGR !");
+        res.redirect("/spgrlod/done");
       });
     })
     .catch(function (err) {

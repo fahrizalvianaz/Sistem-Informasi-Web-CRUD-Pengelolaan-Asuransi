@@ -76,6 +76,7 @@
             </div>
           </div>
         </td>
+
         <% const day1 = element.tanggal_kirim_spgr.getDate(); const month1 = element.tanggal_kirim_spgr.getMonth(); const year1 = element.tanggal_kirim_spgr.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2,
         '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
         <td><%= formattedDate1 %></td>
@@ -83,8 +84,7 @@
           <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% const day2 = element.tanggal_feedback.getDate(); const month2 = element.tanggal_feedback.getMonth(); const year2 = element.tanggal_feedback.getFullYear(); const formattedDate2 = `${day2.toString().padStart(2,
-          '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %> <%= formattedDate2 %>
+          <%= element.tanggal_feedback %>
           <!-- Modal -->
           <div class="modal fade" id="ketModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
