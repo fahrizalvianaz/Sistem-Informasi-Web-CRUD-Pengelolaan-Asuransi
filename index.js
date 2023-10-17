@@ -622,6 +622,154 @@ app.put("/update-keterangan-spgrlod", async (req, res) => {
   }
 });
 
+// Update tanggal feedback done spgrlod
+app.put("/update-tglfeedback-done-spgrlod", async (req, res) => {
+  if (req.body.status === "Pengajuan SPK CTL") {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            tanggal_feedback: req.body.tanggal_feedback,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  } else {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            tanggal_feedback: req.body.tanggal_feedback,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  }
+});
+
+// Update tanggal payment done spgrlod
+app.put("/update-tglpayment-done-spgrlod", async (req, res) => {
+  if (req.body.status === "Pengajuan SPK CTL") {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            tanggal_payment: req.body.tanggal_payment,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  } else {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            tanggal_payment: req.body.tanggal_payment,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  }
+});
+
+// Update pdv done spgrlod
+app.put("/update-pdv-done-spgrlod", async (req, res) => {
+  if (req.body.status === "Pengajuan SPK CTL") {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            pdv: req.body.pdv,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  } else {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            pdv: req.body.pdv,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  }
+});
+
+// Update status payment done spgrlod
+app.put("/update-statuspayment-done-spgrlod", async (req, res) => {
+  if (req.body.status === "Pengajuan SPK CTL") {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            status_payment: req.body.status_payment,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  } else {
+    doneSpgrPayment
+      .updateOne(
+        {
+          no_klaim: req.body.no_klaim,
+        },
+        {
+          $set: {
+            status_payment: req.body.status_payment,
+          },
+        }
+      )
+      .then((result) => {
+        req.flash("msg", "Data berhasil diubah !");
+        res.redirect("/spgrlod/done");
+      });
+  }
+});
+
 // POST
 app.post(
   "/tambah",

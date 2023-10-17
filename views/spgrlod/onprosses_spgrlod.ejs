@@ -28,7 +28,7 @@
     <tbody>
       <% data.forEach(element => { %>
       <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
-      <% const day1 = element.tanggal_kirim_spk.getDate(); const month1 = element.tanggal_kirim_spk.getMonth(); const year1 = element.tanggal_kirim_spk.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2, '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
+      <% const day1 = element.tanggal_kirim_spk.getDate(); const month1 = element.tanggal_kirim_spk.getMonth(); const year1 = element.tanggal_kirim_spk.getFullYear(); let formattedDate1 = `${day1.toString().padStart(2, '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
       
       <tr>
         <td><%=i%></td>
@@ -65,26 +65,33 @@
                     <label for="tsi" class="col-form-label">TSI</label><br />
                     <input class="form-control" id="tsi" name="tsi"  type="text" value="<%= element.tsi %>" readonly/>
                     <label for="dol" class="col-form-label">DOL</label><br />
-                    <input class="form-control"   type="text" value="<%= formattedDate %>" readonly>
+                    <input class="form-control"  type="text" value="<%= formattedDate %>" readonly>
                     <input class="form-control" id="dol" name="dol"  type="text" value="<%= element.dol %>" readonly hidden>
                     <label for="estimasi_awal" class="col-form-label">Estimasi Awal</label><br />
                     <input class="form-control" id="estimasi_awal" name="estimasi_awal"  type="text" value="<%= element.estimasi_awal %>" readonly/>
                     <label for="reserve_amt" class="col-form-label">Reserve Amt</label><br />
                     <input class="form-control" id="reserve_amt" name="reserve_amt"  type="text" value="<%= element.reserve_amt %>" readonly/>
                     <label for="tanggal_kirim_spk" class="col-form-label">Tanggal Kirim SPK</label><br />
-                    <input class="form-control" id="tanggal_kirim_spk" name="tanggal_kirim_spk"  type="text" value="<%= formattedDate1 %>" readonly/>
+                    <% formattedDate1 = `${year1}-${month1.toString().padStart(2, '0')}-${day1.toString().padStart(2, '0')}`; %>
+                    <input class="form-control"  type="text" value="<%= formattedDate1 %>" readonly>
+                    <% const tanggalKirimSpk = new Date(formattedDate1) %>
+                    <input class="form-control"  type="text" name="tanggal_kirim_spk" id="tanggal_kirim_spk" value="<%= tanggalKirimSpk %>" readonly hidden>
                     <% if( element.status[element.status.length - 1] === "Pengajuan SPK CTL") {%>
-                        <% const day2 = element.tanggal_kirim_spk_ctl.getDate(); const month2 = element.tanggal_kirim_spk_ctl.getMonth(); const year2 = element.tanggal_kirim_spk_ctl.getFullYear(); const formattedDate2 = `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %>
+                        <% const day2 = element.tanggal_kirim_spk_ctl.getDate(); const month2 = element.tanggal_kirim_spk_ctl.getMonth(); const year2 = element.tanggal_kirim_spk_ctl.getFullYear(); let formattedDate2 = `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %>
                         <label for="tanggal_kirim_spk_ctl" class="col-form-label">Tanggal Kirim SPK CTL</label><br />
-                        <input class="form-control" id="tanggal_kirim_spk_ctl" name="tanggal_kirim_spk_ctl"  type="text" value="<%= formattedDate2 %>" readonly/>
+                        <input class="form-control"   type="text" value="<%= formattedDate2 %>" readonly/>
+                        <% formattedDate2 = `${year2}-${month2.toString().padStart(2, '0')}-${day2.toString().padStart(2, '0')}`; const tglCtl = new Date(formattedDate2)%>
+                        <input class="form-control" id="tanggal_kirim_spk_ctl" name="tanggal_kirim_spk_ctl"  type="date" value="<%= tglCtl %>" readonly/>
                         <label for="nilai_salvage" class="col-form-label">Nilai Salvage</label><br />
                         <input class="form-control" id="nilai_salvage" name="nilai_salvage"  type="text" value="<%= element.nilai_salvage %>" readonly/>
                         <label for="nett_klaim" class="col-form-label">Nett Klaim</label><br />
                         <input class="form-control" id="nett_klaim" name="nett_klaim"  type="text" value="Rp <%= element.nett_klaim %>" readonly/>
                    <% } else { %>
-                        <% const day3 = element.tanggal_kirim_spk_atl.getDate(); const month3 = element.tanggal_kirim_spk_atl.getMonth(); const year3 = element.tanggal_kirim_spk_atl.getFullYear(); const formattedDate3 = `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; %>
+                        <% const day3 = element.tanggal_kirim_spk_atl.getDate(); const month3 = element.tanggal_kirim_spk_atl.getMonth(); const year3 = element.tanggal_kirim_spk_atl.getFullYear(); let formattedDate3 = `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; %>
                         <label for="tanggal_kirim_spk_atl" class="col-form-label">Tanggal Kirim SPK ATL</label><br />
-                        <input class="form-control" id="tanggal_kirim_spk_atl" name="tanggal_kirim_spk_atl"  type="text" value="<%= formattedDate3 %>" readonly/>
+                        <input class="form-control"  type="text" value="<%= formattedDate3 %>" readonly/>
+                        <% formattedDate3 = `${year3}-${month3.toString().padStart(2, '0')}-${day3.toString().padStart(2, '0')}`; const tglAtl = new Date(formattedDate3)%>
+                        <input class="form-control" id="tanggal_kirim_spk_atl" name="tanggal_kirim_spk_atl"  type="text" value="<%= tglAtl %>" readonly hidden/>
                    <% }%>
                     <label for="nilai_penggantian" class="col-form-label">Nilai Penggantian</label><br />
                     <input class="form-control" id="nilai_penggantian" name="nilai_penggantian"  type="text" value="<%= element.nilai_penggantian %>" readonly/>  
