@@ -4,21 +4,23 @@
   <li class="divider">/</li>
   <li><a href="#" class="active">Done Surat Tolak</a></li>
 </ul>
-<% if (msg.length !== 0) { %>
+<% let i = 1; if (msg.length !== 0) { %>
 <div class="alert alert-success" role="alert"><%= msg %></div>
 <% } %>
 <div class="info-data table-responsive">
   <table class="table table-bordered table-container">
     <thead class="table-primary">
       <tr>
-        <th scope="col">Branch</th>
-        <th scope="col">Claimant</th>
+        <th scope="col">No</th>
         <th scope="col">Claim No.</th>
-        <th scope="col">Policy No.</th>
+        <th scope="col">Claimant</th>
+        <th scope="col">SOB</th>
+        <th scope="col">TSI</th>
         <th scope="col">Estimasi</th>
         <th scope="col">Reserve amt</th>
         <th scope="col">Tgl Kirim Surat</th>
         <th scope="col">Due Date Closed</th>
+        <th scope="col">Keterangan</th>
         <th scope="col">Status</th>
         <th scope="col">x</th>
       </tr>
@@ -26,11 +28,48 @@
     <tbody>
       <% data.forEach(element => { %>
       <tr>
-        <td id="branch"><%= element.branch %></td>
-        <td><%= element.plat_nomor %></td>
+        <td><%= i %></td>
         <td>
           <a href="#staticBackdrop<%=element._id%>" data-bs-toggle="modal"><%= element.no_klaim %> <i class="bi bi-box-arrow-in-down-right"></i></a>
-          <!-- Modal -->
+          <% if(element.status_done_surat_tolak === "Tunggu 30 hari") {%>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <form action="/claim-rejection/final_closed" method="post">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel"><%= element.no_klaim %></h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input class="form-control" id="no_klaim" name="no_klaim" type="text" hidden value="<%= element.no_klaim %>" />
+                      <input class="form-control" id="no_polis" name="no_polis" type="text" hidden value="<%= element.no_polis %>" />
+                      <input class="form-control" id="plat_nomor" name="plat_nomor" type="text" hidden value="<%= element.plat_nomor %>" />
+                      <input class="form-control" id="tsi" name="tsi" type="text" hidden value="<%= element.tsi %>" />
+                      <input class="form-control" id="sob" name="sob" type="text" hidden value="<%= element.sob %>" />
+                      <input class="form-control" id="dol" name="dol" type="text" hidden value="<%= element.dol %>" />
+                      <input class="form-control" id="estimasi_awal" name="estimasi_awal" type="text" hidden value="<%= element.estimasi_awal %>" />
+                      <input class="form-control" id="reserve_amt" name="reserve_amt" type="text" hidden value="<%= element.reserve_amt %>" />
+                      <input class="form-control" id="keterangan" name="keterangan" type="text" hidden value="<%= element.keterangan %>" />
+                      <input class="form-control" id="keterangan_claimclosed" name="keterangan_claimclosed" type="text" hidden value="<%= element.keterangan_claimclosed %>" />
+                      <input class="form-control" id="status_done_surat_tolak" name="status_done_surat_tolak" type="text" hidden value="<%= element.status_done_surat_tolak %>" />
+                      <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" type="text" hidden value="<%= element.tanggal_terima_surat_tolak %>" />
+                      <input class="form-control" id="ddc" name="ddc" type="text" hidden value="<%= element.ddc %>" />
+                      <% for( let i = 0; i < element.status.length; i++ ) { %>
+                      <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
+                      <% } %>
+                      <p>Pindah ke final closed ? </p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          <% } else {%>
+            <!-- Modal -->
           <div class="modal fade" id="staticBackdrop<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -69,9 +108,12 @@
               </div>
             </div>
           </div>
+          <% } %>
+          
         </td>
-        <td id="nopolis"><%= element.no_polis %></td>
-        <td hidden><%= element.tsi %></td>
+        <td><%= element.plat_nomor %></td>
+        <td id="nopolis"><%= element.sob %></td>
+        <td><%= element.tsi %></td>
         <td id="estimasiAwal">
           <a href="#exampleModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i></a> <%=
           element.estimasi_awal %>
@@ -105,9 +147,72 @@
         %>
         <td><%= formattedDate1 %></td>
         <td>
-          <a href="#" data-bs-toggle="tooltip" data-bs-title="<%for( let i=0; i < element.status.length; i++){%> <%=i + 1%>. <%=element.status[i] %> <% if(i < element.status.length - 1) { %> => <%} };%> " data-bs-placement="right">
-            <%= element.status[element.status.length - 1] %>
+          <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
           </a>
+          <%= element.keterangan_claimclosed %>
+          <!-- Modal -->
+          <div class="modal fade" id="ketModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-keterangan-done-surat-tolak?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan_claimclosed" style="height: 100px" required><%= element.keterangan_claimclosed %></textarea>
+                      <label for="floatingTextarea2">Tambah keterangan</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <a href="#statusPaymentModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="#statusDoneSuratTolakModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <%= element.status_done_surat_tolak%>
+          </a>
+          <!-- Modal -->
+          <div class="modal fade" id="statusPaymentModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-status-done-surat-tolak?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
+                    <label for="sob" class="col-form-label">Status</label>
+                    <div class="input-group mb-3">
+                      <select class="form-select" name="status_done_surat_tolak" id="status_done_surat_tolak">
+                        <option value="Tunggu 30 hari" <% if(element.status_done_surat_tolak == "Tunggu 30 hari") {%> selected <%}%> >Tunggu 30 hari</option>
+                        <option value="Ajukan Banding" <% if(element.status_done_surat_tolak == "Ajukan Banding") {%> selected <%}%> >Ajukan Banding</option>
+                        <option value="Exgratia" <% if(element.status_done_surat_tolak == "Exgratia") {%> selected <%}%> >Exgratia</option>
+                      </select>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </td>
         <td class="text-center">
           <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">

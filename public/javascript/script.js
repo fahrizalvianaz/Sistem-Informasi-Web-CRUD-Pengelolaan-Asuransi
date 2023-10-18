@@ -225,3 +225,12 @@ estimasi.forEach((item) => {
     return formatter.format(angka);
   }
 });
+
+// PROFILE DROPDOWN
+// const status = document.querySelector(".status");
+const iconStatus = document.getElementById("status-icon");
+const dropdownStatus = document.querySelector(".status-link");
+
+iconStatus.addEventListener("click", function () {
+  dropdownStatus.classList.toggle("show");
+});

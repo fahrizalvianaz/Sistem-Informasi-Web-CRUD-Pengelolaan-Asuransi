@@ -459,6 +459,10 @@ const doneSuratTolak = mongoose.model("Done_surat_tolak", {
     type: [String],
     required: true,
   },
+  status_done_surat_tolak: {
+    type: String,
+    required: true,
+  },
   keterangan: {
     type: String,
     required: false,

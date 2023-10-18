@@ -374,6 +374,63 @@ app.put("/update-estimasi-claim-rejection", async (req, res) => {
     });
 });
 
+// Update keterangan claim rejections
+app.put("/update-keterangan-claim-rejection", async (req, res) => {
+  await claimClosed
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan_claimclosed: req.body.keterangan_claimclosed,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/onprosses-claimclosed");
+    });
+});
+
+// Update keterangan done surat tolak
+app.put("/update-keterangan-done-surat-tolak", async (req, res) => {
+  await doneSuratTolak
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan_claimclosed: req.body.keterangan_claimclosed,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/done-surat-tolak");
+    });
+});
+
+// Update keterangan done surat tolak
+app.put("/update-status-done-surat-tolak", async (req, res) => {
+  await doneSuratTolak
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_done_surat_tolak: req.body.status_done_surat_tolak,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/done-surat-tolak");
+    });
+});
+
 // Update estimasi investigasi
 app.put("/update-estimasi-investigasi", async (req, res) => {
   await investigasi
@@ -943,6 +1000,21 @@ app.post("/done-surat-tolak", async (req, res) => {
     .catch(function (err) {
       console.log(err);
     });
+});
+
+app.post("/claim-rejection/final_closed", async (req, res) => {
+  res.send(req.body);
+  // doneSuratTolak
+  //   .insertMany(req.body)
+  //   .then(function () {
+  //     claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+  //       req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
+  //       res.redirect("/done-surat-tolak");
+  //     });
+  //   })
+  //   .catch(function (err) {
+  //     console.log(err);
+  //   });
 });
 
 app.post("/tambah-done-spgrlod", async (req, res) => {
