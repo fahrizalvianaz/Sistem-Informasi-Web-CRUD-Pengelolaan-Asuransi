@@ -873,7 +873,7 @@ app.post("/tambah-spk", async (req, res) => {
     .then(function () {
       pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
-        res.redirect("/klaim");
+        res.redirect("/klaim/pengajuan-spk");
       });
     })
     .catch(function (err) {
@@ -953,6 +953,22 @@ app.post("/tambah-done-spgrlod", async (req, res) => {
       spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan done SPGR !");
         res.redirect("/spgrlod/done");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+// Batal CTL
+app.post("/batal-ctl", async (req, res) => {
+  // res.send(req.body);
+  pengajuanSPK
+    .insertMany(req.body)
+    .then(function () {
+      pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
+        res.redirect("/klaim/pengajuan-spk");
       });
     })
     .catch(function (err) {

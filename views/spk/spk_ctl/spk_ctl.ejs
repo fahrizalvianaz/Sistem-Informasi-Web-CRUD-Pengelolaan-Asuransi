@@ -30,7 +30,76 @@
       <% let totalReserveAmt = 0; let totalEstimasi= 0; let totalNettKlaim = 0; let totalNilaiPeng = 0; let totalNilaiSalvage = 0; spkCtl.forEach(element => { %>
       <tr>
         <td><%=i%></td>
-        <td><%=element.no_klaim%></td>
+        <td>
+          <a href="#spgrModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <%=element.no_klaim%> </a>
+          <!-- Modal -->
+          <form action="/batal-ctl" method="post">
+            <div class="modal fade" id="spgrModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.status[element.status.length - 1] %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="container-sm">
+                    <h6 class="text-center mt-4">Detail Klaim</h6>
+                    <hr />
+                  </div>
+                  <div class="modal-body">
+                    <label for="no_polis" class="col-form-label">No Polis</label><br />
+                    <input class="form-control" id="no_polis" name="no_polis" type="text" value="<%= element.no_polis %>" readonly />
+                    <label for="branch" class="col-form-label">Branch</label><br />
+                    <input class="form-control" id="branch" name="branch" type="text" value="<%= element.branch %>" readonly />
+                    <label for="no_klaim" class="col-form-label">No Klaim</label><br />
+                    <input class="form-control" id="no_klaim" name="no_klaim" type="text" value="<%= element.no_klaim %>" readonly />
+                    <label for="sob" class="col-form-label">SOB</label><br />
+                    <input class="form-control" id="sob" name="sob" type="text" value="<%= element.sob %>" readonly />
+                    <label for="plat_nomor" class="col-form-label">Claimant</label><br />
+                    <input class="form-control" id="plat_nomor" name="plat_nomor" type="text" value="<%= element.plat_nomor %>" readonly />
+                    <label for="tsi" class="col-form-label">TSI</label><br />
+                    <input class="form-control" id="tsi" name="tsi" type="text" value="<%= element.tsi %>" readonly />
+                    <% const day3 = element.dol.getDate(); const month3 = element.dol.getMonth(); const year3 = element.dol.getFullYear(); const formattedDate3 = `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2,
+                    '0')}-${year3}`; %>
+                    <label for="dol" class="col-form-label">DOL</label><br />
+                    <input class="form-control" type="text" value="<%= formattedDate3 %>" readonly />
+                    <input class="form-control" id="dol" name="dol" type="text" value="<%= element.dol %>" readonly hidden />
+                    <label for="estimasi_awal" class="col-form-label">Estimasi Awal</label><br />
+                    <input class="form-control" id="estimasi_awal" name="estimasi_awal" type="text" value="<%= element.estimasi_awal %>" readonly />
+                    <label for="reserve_amt" class="col-form-label">Reserve Amt</label><br />
+                    <input class="form-control" id="reserve_amt" name="reserve_amt" type="text" value="<%= element.reserve_amt %>" readonly />
+                    <label for="tanggal_kirim_spk" class="col-form-label">Tanggal Kirim SPK</label><br />
+                    <% const day1 = element.tanggal_kirim_spk.getDate(); const month1 = element.tanggal_kirim_spk.getMonth(); const year1 = element.tanggal_kirim_spk.getFullYear(); let formattedDate1 = `${day1.toString().padStart(2,
+                    '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
+                    <input class="form-control" type="text" value="<%= formattedDate1 %>" readonly />
+                    <% formattedDate1 = `${year1}-${month1.toString().padStart(2, '0')}-${day1.toString().padStart(2, '0')}`; const tanggalKirimSpk = new Date(formattedDate1) %>
+                    <input class="form-control" type="text" name="tanggal_kirim_spk" id="tanggal_kirim_spk" value="<%= tanggalKirimSpk %>" readonly hidden />
+                    <% const day2 = element.tanggal_kirim_spk_ctl.getDate(); const month2 = element.tanggal_kirim_spk_ctl.getMonth(); const year2 = element.tanggal_kirim_spk_ctl.getFullYear(); let formattedDate2 =
+                    `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %>
+                    <label for="tanggal_kirim_spk_ctl" class="col-form-label">Tanggal Kirim SPK CTL</label><br />
+                    <input class="form-control" type="text" value="<%= formattedDate2 %>" readonly />
+                    <% formattedDate2 = `${year2}-${month2.toString().padStart(2, '0')}-${day2.toString().padStart(2, '0')}`; const tglCtl = new Date(formattedDate2)%>
+                    <input class="form-control" type="date" value="<%= tglCtl %>" readonly hidden />
+                    <label for="nilai_salvage" class="col-form-label">Nilai Salvage</label><br />
+                    <input class="form-control" type="text" value="<%= element.nilai_salvage %>" readonly />
+                    <label for="nilai_penggantian" class="col-form-label">Nilai Penggantian</label><br />
+                    <input class="form-control" type="text" value="<%= element.nilai_penggantian %>" readonly />
+                    <label for="nett_klaim" class="col-form-label">Nett Klaim</label><br />
+                    <input class="form-control" type="text" value="Rp <%= element.nett_klaim %>" readonly />
+                    <input class="form-control" id="keterangan" name="keterangan" type="text" value="<%= element.keterangan %>" readonly hidden />
+                    <% for( let i = 0; i < element.status.length; i++ ) { %>
+                    <input class="form-control" id="status" name="status" hidden value="<%= element.status[i] %>" />
+                    <% } %>
+                    <input class="form-control" id="status" name="status" hidden value="Batal CTL" />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah anda yakin ?')">Batal CTL</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </td>
         <td><%= element.plat_nomor %></td>
         <td><%= element.sob %></td>
         <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
