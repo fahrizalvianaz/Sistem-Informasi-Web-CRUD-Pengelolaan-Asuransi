@@ -39,12 +39,15 @@ const kodeCabang = {
 const cabang = document.getElementById("cabang");
 const noPolis = document.getElementById("nopolis");
 
-const noPolisValue = noPolis.value;
-if (typeof noPolisValue != "undefined") {
-  const kodeCabangValue = noPolisValue.substring(4, 6);
-  const cabangValue = kodeCabang[kodeCabangValue] || "-";
-  cabang.value = cabangValue; 
-}
+if(cabang != null) {
+  const noPolisValue = noPolis.value;
+  if (typeof noPolisValue != "undefined") {
+    const kodeCabangValue = noPolisValue.substring(4, 6);
+    const cabangValue = kodeCabang[kodeCabangValue] || "-";
+    cabang.value = cabangValue; 
+  }
+} 
+
 
 
 // PENGATURAN AGING

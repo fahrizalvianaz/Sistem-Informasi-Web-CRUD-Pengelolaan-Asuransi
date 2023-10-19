@@ -164,9 +164,25 @@ const investigasi = mongoose.model("investigasi", {
     type: String,
     required: true,
   },
+  follow_up_1: {
+    type: Date,
+    required: false,
+  },
+  follow_up_2: {
+    type: Date,
+    required: false,
+  },
+  follow_up_3: {
+    type: Date,
+    required: false,
+  },
+  follow_up_4: {
+    type: Date,
+    required: false,
+  },
   keterangan: {
     type: String,
-    required: true,
+    required: false,
   },
   aging: {
     type: Number,

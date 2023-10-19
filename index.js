@@ -463,6 +463,101 @@ app.put("/update-estimasi-investigasi", async (req, res) => {
     });
 });
 
+// Update keterangan investigasi
+app.put("/update-keterangan-investigasi", async (req, res) => {
+  await investigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan: req.body.keterangan,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/onprosses-investigasi");
+    });
+});
+
+// Update folloup1 investigasi
+app.put("/update-followup1-investigasi", async (req, res) => {
+  await investigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          follow_up_1: req.body.follow_up_1,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/onprosses-investigasi");
+    });
+});
+
+// Update folloup2 investigasi
+app.put("/update-followup2-investigasi", async (req, res) => {
+  await investigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          follow_up_2: req.body.follow_up_2,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/onprosses-investigasi");
+    });
+});
+
+// Update folloup2 investigasi
+app.put("/update-followup3-investigasi", async (req, res) => {
+  await investigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          follow_up_3: req.body.follow_up_3,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/onprosses-investigasi");
+    });
+});
+
+// Update folloup2 investigasi
+app.put("/update-followup4-investigasi", async (req, res) => {
+  await investigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          follow_up_4: req.body.follow_up_4,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/onprosses-investigasi");
+    });
+});
+
 // Update nilai estimasi spk ctl
 app.put("/update-estimasi-spk-ctl", async (req, res) => {
   await spgrlod
