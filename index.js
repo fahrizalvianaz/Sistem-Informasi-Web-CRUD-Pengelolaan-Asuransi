@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
 import "./utils/db.js";
-import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod, doneSpgrPayment } from "./model/onprosses_pengajuan_klaim.js";
+import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod, doneSpgrPayment, finalClosed } from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
 import session from "express-session";
@@ -53,6 +53,19 @@ app.get("/onprosses-claimclosed", async (req, res) => {
     layout: "layouts/main_layout",
     claimclosed,
     count,
+    msg: req.flash("msg"),
+  });
+});
+app.get("/final-closed", async (req, res) => {
+  const dueDateClosed = await finalClosed.distinct("ddc");
+  // res.send(dueDateClosed);
+  const data = await finalClosed.find();
+  const count = await finalClosed.countDocuments();
+  res.render("claim_closed/final_closed", {
+    layout: "layouts/main_layout",
+    data,
+    count,
+    dueDateClosed,
     msg: req.flash("msg"),
   });
 });
@@ -1002,19 +1015,19 @@ app.post("/done-surat-tolak", async (req, res) => {
     });
 });
 
-app.post("/claim-rejection/final_closed", async (req, res) => {
-  res.send(req.body);
-  // doneSuratTolak
-  //   .insertMany(req.body)
-  //   .then(function () {
-  //     claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-  //       req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
-  //       res.redirect("/done-surat-tolak");
-  //     });
-  //   })
-  //   .catch(function (err) {
-  //     console.log(err);
-  //   });
+app.post("/final-closed", async (req, res) => {
+  // res.send(req.body);
+  finalClosed
+    .insertMany(req.body)
+    .then(function () {
+      doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil ditambahkan ke final closed !");
+        res.redirect("/final-closed");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 });
 
 app.post("/tambah-done-spgrlod", async (req, res) => {
@@ -1039,8 +1052,12 @@ app.post("/batal-ctl", async (req, res) => {
     .insertMany(req.body)
     .then(function () {
       pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-        req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
-        res.redirect("/klaim/pengajuan-spk");
+        spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
+            res.redirect("/klaim/pengajuan-spk");
+          });
+        });
       });
     })
     .catch(function (err) {

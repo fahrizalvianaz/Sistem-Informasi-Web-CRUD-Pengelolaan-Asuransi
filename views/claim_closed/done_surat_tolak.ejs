@@ -36,7 +36,7 @@
             <div class="modal fade" id="staticBackdrop<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
-                  <form action="/claim-rejection/final_closed" method="post">
+                  <form action="/final-closed" method="post">
                     <div class="modal-header">
                       <h1 class="modal-title fs-5" id="staticBackdropLabel"><%= element.no_klaim %></h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -54,10 +54,13 @@
                       <input class="form-control" id="keterangan_claimclosed" name="keterangan_claimclosed" type="text" hidden value="<%= element.keterangan_claimclosed %>" />
                       <input class="form-control" id="status_done_surat_tolak" name="status_done_surat_tolak" type="text" hidden value="<%= element.status_done_surat_tolak %>" />
                       <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" type="text" hidden value="<%= element.tanggal_terima_surat_tolak %>" />
-                      <input class="form-control" id="ddc" name="ddc" type="text" hidden value="<%= element.ddc %>" />
+                      
+                      <input class="form-control" id="ddc" name="ddc"  type="text" value="<%= element.ddc %>" readonly hidden/>
+                     
                       <% for( let i = 0; i < element.status.length; i++ ) { %>
                       <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
                       <% } %>
+                      <input class="form-control" id="status" name="status" type="text" hidden value="Closed Reas" />
                       <p>Pindah ke final closed ? </p>
                     </div>
                     <div class="modal-footer">

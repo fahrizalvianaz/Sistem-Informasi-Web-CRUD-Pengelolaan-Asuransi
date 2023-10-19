@@ -499,6 +499,89 @@ const doneSuratTolak = mongoose.model("Done_surat_tolak", {
   },
 });
 
+const finalClosed = mongoose.model("final_closed", {
+  no_polis: {
+    type: String,
+    required: true,
+  },
+  branch: {
+    type: String,
+    required: true,
+  },
+  no_klaim: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  sob: {
+    type: String,
+    required: true,
+  },
+  plat_nomor: {
+    type: String,
+    required: true,
+  },
+  tsi: {
+    type: String,
+    required: true,
+  },
+  dol: {
+    type: Date,
+    required: true,
+  },
+  estimasi_awal: {
+    type: String,
+    required: false,
+  },
+  reserve_amt: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: [String],
+    required: true,
+  },
+  status_done_surat_tolak: {
+    type: String,
+    required: true,
+  },
+  keterangan: {
+    type: String,
+    required: false,
+  },
+  keterangan_claimclosed: {
+    type: String,
+    required: true,
+  },
+  tanggal_terima_surat_tolak: {
+    type: Date,
+    required: true,
+  },
+  ddc: {
+    type: Date,
+    required: true,
+  },
+  investigator: {
+    type: String,
+  },
+  branch: {
+    type: String,
+  },
+  tanggal_kirim_surat: {
+    type: Date,
+  },
+  nomor_kirim_surat: {
+    type: String,
+  },
+  keterangan: {
+    type: String,
+  },
+  aging: {
+    type: String,
+  },
+});
+
+
 const spgrlod = mongoose.model("spgrlod", {
   no_polis: {
     type: String,
@@ -668,4 +751,4 @@ const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
   },
 });
 
-export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment };
+export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed };
