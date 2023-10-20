@@ -48,15 +48,14 @@
                       <input class="form-control" id="tsi" name="tsi" type="text" hidden value="<%= element.tsi %>" />
                       <input class="form-control" id="sob" name="sob" type="text" hidden value="<%= element.sob %>" />
                       <input class="form-control" id="dol" name="dol" type="text" hidden value="<%= element.dol %>" />
+                      <input class="form-control" id="branch" name="branch" type="text" hidden value="<%= element.branch %>" />
                       <input class="form-control" id="estimasi_awal" name="estimasi_awal" type="text" hidden value="<%= element.estimasi_awal %>" />
                       <input class="form-control" id="reserve_amt" name="reserve_amt" type="text" hidden value="<%= element.reserve_amt %>" />
                       <input class="form-control" id="keterangan" name="keterangan" type="text" hidden value="<%= element.keterangan %>" />
                       <input class="form-control" id="keterangan_claimclosed" name="keterangan_claimclosed" type="text" hidden value="<%= element.keterangan_claimclosed %>" />
                       <input class="form-control" id="status_done_surat_tolak" name="status_done_surat_tolak" type="text" hidden value="<%= element.status_done_surat_tolak %>" />
                       <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" type="text" hidden value="<%= element.tanggal_terima_surat_tolak %>" />
-                      
                       <input class="form-control" id="ddc" name="ddc"  type="text" value="<%= element.ddc %>" readonly hidden/>
-                     
                       <% for( let i = 0; i < element.status.length; i++ ) { %>
                       <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
                       <% } %>
@@ -72,11 +71,51 @@
               </div>
             </div>
           <% } else {%>
+
             <!-- Modal -->
           <div class="modal fade" id="staticBackdrop<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/claim-rejection/done-surat-tolak" method="post">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel"><%= element.no_klaim %></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                   <p>Ajukan banding atau Exgratia</p>
+                  </div>
+                  <div class="modal-footer">
+                    <form action="/final-closed" method="post">
+                      <input class="form-control" id="no_klaim" name="no_klaim" type="text" hidden value="<%= element.no_klaim %>" />
+                      <input class="form-control" id="no_polis" name="no_polis" type="text" hidden value="<%= element.no_polis %>" />
+                      <input class="form-control" id="plat_nomor" name="plat_nomor" type="text" hidden value="<%= element.plat_nomor %>" />
+                      <input class="form-control" id="tsi" name="tsi" type="text" hidden value="<%= element.tsi %>" />
+                      <input class="form-control" id="sob" name="sob" type="text" hidden value="<%= element.sob %>" />
+                      <input class="form-control" id="branch" name="branch" type="text" hidden value="<%= element.branch %>" />
+                      <input class="form-control" id="dol" name="dol" type="text" hidden value="<%= element.dol %>" />
+                      <input class="form-control" id="estimasi_awal" name="estimasi_awal" type="text" hidden value="<%= element.estimasi_awal %>" />
+                      <input class="form-control" id="reserve_amt" name="reserve_amt" type="text" hidden value="<%= element.reserve_amt %>" />
+                      <input class="form-control" id="keterangan" name="keterangan" type="text" hidden value="<%= element.keterangan %>" />
+                      <input class="form-control" id="keterangan_claimclosed" name="keterangan_claimclosed" type="text" hidden value="<%= element.keterangan_claimclosed %>" />
+                      <input class="form-control" id="status_done_surat_tolak" name="status_done_surat_tolak" type="text" hidden value="<%= element.status_done_surat_tolak %>" />
+                      <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" type="text" hidden value="<%= element.tanggal_terima_surat_tolak %>" />
+                      <input class="form-control" id="ddc" name="ddc"  type="text" value="<%= element.ddc %>" readonly hidden/>
+                      <% for( let i = 0; i < element.status.length; i++ ) { %>
+                      <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
+                      <% } %>
+                      <input class="form-control" id="status" name="status" type="text" hidden value="Closed Reas" />
+                      <button type="submit" class="btn btn-danger">Ditolak</button>
+                    </form>
+                    <a href="#diterima<%=element._id%>" data-bs-toggle="modal"><button type="submit" class="btn btn-primary">Diterima</button></a>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal -->
+          <div class="modal fade" id="diterima<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/claim-rejection/done-surat-tolak/spk" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -85,23 +124,20 @@
                     <input class="form-control" id="no_klaim" name="no_klaim" type="text" hidden value="<%= element.no_klaim %>" />
                     <input class="form-control" id="no_polis" name="no_polis" type="text" hidden value="<%= element.no_polis %>" />
                     <input class="form-control" id="plat_nomor" name="plat_nomor" type="text" hidden value="<%= element.plat_nomor %>" />
+                    <input class="form-control" id="sob" name="sob" type="text" hidden value="<%= element.sob %>" />
+                    <input class="form-control" id="branch" name="branch" type="text" hidden value="<%= element.branch %>" />
                     <input class="form-control" id="tsi" name="tsi" type="text" hidden value="<%= element.tsi %>" />
+                    <input class="form-control" id="dol" name="dol" type="text" hidden value="<%= element.dol %>" />
                     <input class="form-control" id="estimasi_awal" name="estimasi_awal" type="text" hidden value="<%= element.estimasi_awal %>" />
                     <input class="form-control" id="reserve_amt" name="reserve_amt" type="text" hidden value="<%= element.reserve_amt %>" />
                     <input class="form-control" id="keterangan" name="keterangan" type="text" hidden value="<%= element.keterangan %>" />
                     <% for( let i = 0; i < element.status.length; i++ ) { %>
                     <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
                     <% } %>
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Tgl Terima Surat Tolak</label><br />
-                    <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" placeholder="mm/dd/yyyy" type="date" required />
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Status</label><br />
-                    <div class="input-group mb-3">
-                      <select class="form-select" name="status" id="status" required>
-                        <option value="Tunggu 30 hari">Tunggu 30 hari</option>
-                        <option value="Ajukan Banding">Ajukan Banding</option>
-                        <option value="Exgratia">Exgratia</option>
-                      </select>
-                    </div>
+                    <input class="form-control" id="status" name="status" type="text" hidden value="Pengajuan SPK" />
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Tanggal Pengajuan SPK</label><br />
+                    <input class="form-control" id="tanggal_kirim_spk" name="tanggal_kirim_spk" placeholder="mm/dd/yyyy" type="date" required />
+                    
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

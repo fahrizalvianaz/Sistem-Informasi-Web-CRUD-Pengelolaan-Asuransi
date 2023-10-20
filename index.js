@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
 import "./utils/db.js";
-import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod, doneSpgrPayment, finalClosed } from "./model/onprosses_pengajuan_klaim.js";
+import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod, doneSpgrPayment, finalClosed, hasilInvestigasi } from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
 import session from "express-session";
@@ -89,6 +89,34 @@ app.get("/onprosses-investigasi", async (req, res) => {
   // res.send(data);
   const count = await investigasi.countDocuments();
   res.render("investigasi/onprosses_investigasi", {
+    layout: "layouts/main_layout",
+    investigatorNames,
+    data,
+    count,
+    msg: req.flash("msg"),
+  });
+});
+
+app.get("/hasil-investigasi", async (req, res) => {
+  // const investigator = await investigasi.find();
+  const investigatorNames = await hasilInvestigasi.distinct("investigator");
+  const data = await hasilInvestigasi.find();
+  // for (const document of data) {
+  //   const tglsebelumValue = new Date(document.tanggal_kirim_surat);
+  //   const tglsekarangValue = new Date();
+
+  //   const selisihMilidetik = tglsekarangValue - tglsebelumValue;
+  //   const selisihDetik = selisihMilidetik / 1000;
+  //   const selisihMenit = selisihDetik / 60;
+  //   const selisihJam = selisihMenit / 60;
+  //   const selisihHari = selisihJam / 24;
+  //   document.aging = parseInt(selisihHari);
+  //   // document.aging = document.aging +  1;
+  //   await document.save();
+  // }
+  // res.send(data);
+  const count = await hasilInvestigasi.countDocuments();
+  res.render("investigasi/investigasi_selesei", {
     layout: "layouts/main_layout",
     investigatorNames,
     data,
@@ -947,7 +975,12 @@ app.post(
       const duplikat5 = await pengajuanSPKPartial.findOne({ no_klaim: value });
       const duplikat6 = await pengajuanSPKCtl.findOne({ no_klaim: value });
       const duplikat7 = await pengajuanSPKAtl.findOne({ no_klaim: value });
-      if (duplikat1 || duplikat2 || duplikat3 || duplikat4 || duplikat5 || duplikat6 || duplikat7) {
+      const duplikat8 = await finalClosed.findOne({ no_klaim: value });
+      const duplikat9 = await doneSuratTolak.findOne({ no_klaim: value });
+      const duplikat10 = await spgrlod.findOne({ no_klaim: value });
+      const duplikat11 = await doneSpgrPayment.findOne({ no_klaim: value });
+
+      if (duplikat1 || duplikat2 || duplikat3 || duplikat4 || duplikat5 || duplikat6 || duplikat7 || duplikat8 || duplikat9 || duplikat10 || duplikat11) {
         throw new Error("No klaim sudah digunakan ");
       } else if (value.length < 15) {
         throw new Error("No klaim kurang dari 14 karakter");
@@ -1118,6 +1151,21 @@ app.post("/final-closed", async (req, res) => {
       doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke final closed !");
         res.redirect("/final-closed");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.post("/claim-rejection/done-surat-tolak/spk", async (req, res) => {
+  // res.send(req.body);
+  pengajuanSPK
+    .insertMany(req.body)
+    .then(function () {
+      doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil ditambahkan ke pengajuan SPK !");
+        res.redirect("/klaim/pengajuan-spk");
       });
     })
     .catch(function (err) {

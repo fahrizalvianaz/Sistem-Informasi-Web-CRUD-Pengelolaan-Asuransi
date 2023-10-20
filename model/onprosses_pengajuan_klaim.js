@@ -193,6 +193,127 @@ const investigasi = mongoose.model("investigasi", {
   },
 });
 
+const hasilInvestigasi = mongoose.model("hasil_investigasi", {
+  no_polis: {
+    type: String,
+    required: true,
+  },
+  branch: {
+    type: String,
+    required: true,
+  },
+  no_klaim: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  sob: {
+    type: String,
+  },
+  plat_nomor: {
+    type: String,
+    required: true,
+  },
+  tsi: {
+    type: String,
+    required: true,
+  },
+  dol: {
+    type: Date,
+    required: true,
+  },
+  estimasi_awal: {
+    type: String,
+    required: false,
+  },
+  reserve_amt: {
+    type: String,
+    required: true,
+  },
+  investigator: {
+    type: String,
+    required: true,
+  },
+  tanggal_kirim_surat: {
+    type: Date,
+    required: true,
+  },
+  nomor_kirim_surat: {
+    type: String,
+    required: true,
+  },
+  follow_up_1: {
+    type: Date,
+    required: false,
+  },
+  follow_up_2: {
+    type: Date,
+    required: false,
+  },
+  follow_up_3: {
+    type: Date,
+    required: false,
+  },
+  follow_up_4: {
+    type: Date,
+    required: false,
+  },
+  tanggal_terima_lhs: {
+    type: Date,
+    required: true,
+  },
+  tanggal_terima_invoice: {
+    type: Date,
+    required: false,
+  },
+  hasil_investigasi: {
+    type: String,
+    required: true,
+  },
+  status_claim: {
+    type: String,
+    required: false,
+  },
+  biaya_akomodasi: {
+    type: String,
+    required: false,
+  },
+  success_fee: {
+    type: String,
+    required: false,
+  },
+  total_tagihan: {
+    type: String,
+    required: false,
+  },
+  status_payment: {
+    type: String,
+    required: false,
+  },
+  tanggal_payment: {
+    type: Date,
+    required: false,
+  },
+  pdv: {
+    type: String,
+    required: false,
+  },
+  keterangan: {
+    type: String,
+    required: false,
+  },
+  aging_investigasi: {
+    type: Number,
+  },
+  aging_payment: {
+    type: Number,
+  },
+  status: {
+    type: [String],
+    require: true,
+  },
+});
+
 const pengajuanSPK = mongoose.model("pengajuanSPK", {
   no_polis: {
     type: String,
@@ -767,4 +888,4 @@ const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
   },
 });
 
-export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed };
+export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed, hasilInvestigasi };
