@@ -98,23 +98,8 @@ app.get("/onprosses-investigasi", async (req, res) => {
 });
 
 app.get("/hasil-investigasi", async (req, res) => {
-  // const investigator = await investigasi.find();
   const investigatorNames = await hasilInvestigasi.distinct("investigator");
   const data = await hasilInvestigasi.find();
-  // for (const document of data) {
-  //   const tglsebelumValue = new Date(document.tanggal_kirim_surat);
-  //   const tglsekarangValue = new Date();
-
-  //   const selisihMilidetik = tglsekarangValue - tglsebelumValue;
-  //   const selisihDetik = selisihMilidetik / 1000;
-  //   const selisihMenit = selisihDetik / 60;
-  //   const selisihJam = selisihMenit / 60;
-  //   const selisihHari = selisihJam / 24;
-  //   document.aging = parseInt(selisihHari);
-  //   // document.aging = document.aging +  1;
-  //   await document.save();
-  // }
-  // res.send(data);
   const count = await hasilInvestigasi.countDocuments();
   res.render("investigasi/investigasi_selesei", {
     layout: "layouts/main_layout",
@@ -583,6 +568,251 @@ app.put("/update-followup4-investigasi", async (req, res) => {
     .then((result) => {
       req.flash("msg", "Data berhasil diubah !");
       res.redirect("/onprosses-investigasi");
+    });
+});
+
+// Update status claim hasil investigasi
+app.put("/update-status-claim-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_claim: req.body.status_claim,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+// Update status claim hasil investigasi
+app.put("/update-status-claim-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_claim: req.body.status_claim,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+// Update pdv hasil investigasi
+app.put("/update-pdv-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          pdv: req.body.pdv,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+// Update status payment hasil investigasi
+app.put("/update-status-payment-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_payment: req.body.status_payment,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+
+// Update status payment hasil investigasi
+app.put("/update-estimasi-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          estimasi_awal: req.body.estimasi_awal,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+// Update  tanggal payment hasil investigasi
+app.put("/update-tgl-payment-hasil-investigasi", async (req, res) => {
+  const tglInvoice = new Date(req.body.tanggal_terima_invoice);
+  const tglPaymentValue = new Date(req.body.tanggal_payment);
+  const selisihMilidetik = tglPaymentValue - tglInvoice;
+  const selisihDetik = selisihMilidetik / 1000;
+  const selisihMenit = selisihDetik / 60;
+  const selisihJam = selisihMenit / 60;
+  const selisihHari = selisihJam / 24;
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          tanggal_payment: req.body.tanggal_payment,
+          aging_payment: parseInt(selisihHari),
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+// Update invoice hasil investigasi
+app.put("/update-invoice-hasil-investigasi", async (req, res) => {
+  let tglInvoice = new Date(req.body.tanggal_terima_invoice);
+  const tglsekarangValue = new Date();
+  let selisihMilidetik = tglsekarangValue - tglInvoice;
+  let selisihDetik = selisihMilidetik / 1000;
+  let selisihMenit = selisihDetik / 60;
+  let selisihJam = selisihMenit / 60;
+  let selisihHari = selisihJam / 24;
+  if (req.body.tanggal_payment != "") {
+    const tglPaymentValue = new Date(req.body.tanggal_payment);
+    res.send("hallo");
+    selisihMilidetik = tglPaymentValue - tglInvoice;
+    selisihDetik = selisihMilidetik / 1000;
+    selisihMenit = selisihDetik / 60;
+    selisihJam = selisihMenit / 60;
+    selisihHari = selisihJam / 24;
+  }
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          tanggal_terima_invoice: req.body.tanggal_terima_invoice,
+          aging_payment: parseInt(selisihHari),
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+// Update akomodasi hasil investigasi
+app.put("/update-akomodasi-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          biaya_akomodasi: req.body.biaya_akomodasi,
+        },
+      }
+    )
+    .then(async (result) => {
+      let totalTagihan = 0;
+      let akomodasiValue = parseInt(req.body.biaya_akomodasi.replace(/[^0-9]/g, ""));
+      let successValue = parseInt(req.body.success_fee.replace(/[^0-9]/g, ""));
+
+      if (isNaN(akomodasiValue)) {
+        akomodasiValue = 0;
+      }
+      if (isNaN(successValue)) {
+        successValue = 0;
+      }
+      totalTagihan = akomodasiValue + successValue;
+      await hasilInvestigasi
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              total_tagihan: totalTagihan.toLocaleString('id-ID'),
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/hasil-investigasi");
+        });
+    });
+});
+
+// Update success fee hasil investigasi
+app.put("/update-success-fee-hasil-investigasi", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          success_fee: req.body.success_fee,
+        },
+      }
+    )
+    .then(async (result) => {
+      let totalTagihan = 0;
+      let akomodasiValue = parseInt(req.body.biaya_akomodasi.replace(/[^0-9]/g, ""));
+      let successValue = parseInt(req.body.success_fee.replace(/[^0-9]/g, ""));
+
+      if (isNaN(akomodasiValue)) {
+        akomodasiValue = 0;
+      }
+      if (isNaN(successValue)) {
+        successValue = 0;
+      }
+
+      totalTagihan = akomodasiValue + successValue;
+      await hasilInvestigasi
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              total_tagihan: totalTagihan.toLocaleString('id-ID'),
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/hasil-investigasi");
+        });
     });
 });
 
@@ -1056,7 +1286,23 @@ app.post("/tambah-investigasi", async (req, res) => {
     .then(function () {
       pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke investigasi !");
-        res.redirect("/klaim");
+        res.redirect("/onprosses-investigasi");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+// Investigasi
+app.post("/tambah-hasil-investigasi", async (req, res) => {
+  // res.send(req.body);
+  hasilInvestigasi
+    .insertMany(req.body)
+    .then(function () {
+      investigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil ditambahkan ke hasil investigasi !");
+        res.redirect("/hasil-investigasi");
       });
     })
     .catch(function (err) {

@@ -7,7 +7,7 @@
 
 <hr>
 
-<% if (msg.length !== 0) { %>
+<%  if (msg.length !== 0) { %>
 <div class="alert alert-success" role="alert"><%= msg %></div>
 <% } %> <% let i = 0;investigatorNames.forEach(element => { %>
   <% const investigatorData = data.filter(element => element.investigator === investigatorNames[i]); %>
@@ -29,6 +29,7 @@
         <th scope="col">Aging</th>
         <th scope="col">Hasil Inv</th>
         <th scope="col">Status Claim</th>
+        <th scope="col">Estimasi</th>
         <th scope="col">Tgl Terima Invoice</th>
         <th scope="col">Biaya Akomodasi</th>
         <th scope="col">Success Fee</th>
@@ -41,18 +42,16 @@
       </tr>
     </thead>
     <tbody>
-      <% let j = 1; let formattedDate3 = "-"; let formattedDate2 = "-";let formattedDate1 = "-"; let formattedDate4 = "-"; investigatorData.forEach(element => { %>
+      <% let j = 1; var totalTagihanValue = 0;let totalEstimasi= 0; let formattedDate3 = "-"; let formattedDate2 = "-";let formattedDate1 = "-"; let formattedDate4 = "-"; investigatorData.forEach(element => { %>
       <tr>
         <td><%= j %></td>
-        <td>
-          <a href="#doninvModal<%=element._id%>" data-bs-toggle="modal"><%= element.no_klaim %> <i class="bi bi-box-arrow-in-down-right"></i></a>
-        </td>
+        <td><%= element.no_klaim %> <i class="bi bi-box-arrow-in-down-right"></i></td>
         <td><%= element.plat_nomor %></td>
         <td><%= element.sob %></td>
-        <% const day = element.tanggal_kirim_surat.getDate(); const month = element.tanggal_kirim_surat.getMonth() + 1; const year = element.tanggal_kirim_surat.getFullYear(); const formattedDate = `${day.toString().padStart(2,
+        <% const day = element.tanggal_kirim_surat.getDate(); const month = element.tanggal_kirim_surat.getMonth() + 1; const year = element.tanggal_kirim_surat.getFullYear(); let formattedDate = `${day.toString().padStart(2,
         '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
         <td><%= formattedDate %></td>
-        <% const day1 = element.tanggal_terima_lhs.getDate(); const month1 = element.tanggal_terima_lhs.getMonth() + 1; const year1 = element.tanggal_terima_lhs.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2,
+        <% const day1 = element.tanggal_terima_lhs.getDate(); const month1 = element.tanggal_terima_lhs.getMonth() + 1; const year1 = element.tanggal_terima_lhs.getFullYear(); let formattedDate1 = `${day1.toString().padStart(2,
         '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
         <td><%= formattedDate1 %></td>
         <td><%=element.aging_investigasi%></td>
@@ -66,17 +65,48 @@
           <div class="modal fade" id="statusModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-keterangan-investigasi?_method=PUT" method="post">
+                <form action="/update-status-claim-hasil-investigasi?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <div class="form-floating">
-                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan" style="height: 100px" required><%= element.keterangan %></textarea>
-                      <label for="floatingTextarea2">Tambah keterangan</label>
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="status_claim" style="height: 100px" required><%= element.status_claim %></textarea>
+                      <label for="floatingTextarea2">Status Claim</label>
                     </div>
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <a href="#estimasiModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <% const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} %>
+          <%= element.estimasi_awal%>
+          <!-- Modal -->
+          <div class="modal fade" id="estimasiModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-estimasi-hasil-investigasi?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Estimasi</label><br />
+                    <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -92,22 +122,27 @@
             <i class="bi bi-pencil"></i>
           </a>
           <% if (element.tanggal_terima_invoice != null) { const day2 = element.tanggal_terima_invoice.getDate(); const month2 = element.tanggal_terima_invoice.getMonth(); const year2 = element.tanggal_terima_invoice.getFullYear(); formattedDate2 =
-          `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { formattedDate1 = "-" } %> <%= formattedDate1 %>
+          `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { formattedDate2 = "-" } %> <%= formattedDate2 %>
           <!-- Modal -->
           <div class="modal fade" id="invoiceModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-followup1-investigasi?_method=PUT" method="post">
+                <form action="/update-invoice-hasil-investigasi?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
-                    <label for="tanggal_feedback" class="col-form-label"> Follow Up 1</label>
-                    <input class="form-control" id="follow_up_1" name="follow_up_1" value="<%= element.follow_up_1 %>" type="date" />
+                    <label for="tanggal_feedback" class="col-form-label"> Tanggal Terima Invoice</label>
+                    <% let oldInvoice = new Date(element.tanggal_terima_invoice)%>
+                    <% var dd = String(oldInvoice.getDate()).padStart(2, '0');
+                      var mm = String(oldInvoice.getMonth() + 1).padStart(2, '0'); 
+                      var yyyy = oldInvoice.getFullYear();
+                      oldInvoice = yyyy + '-' + mm + '-' + dd;%>
+                    <input class="form-control" id="tanggal_terima_invoice" name="tanggal_terima_invoice" value="<%= oldInvoice %>" type="date" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
                     <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    <input class="form-control" id="tanggal_payment" name="tanggal_payment" value="<%= element.tanggal_payment %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -119,23 +154,24 @@
           </div>
         </td>
         <td>
-          <a href="#exampleModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+          <a href="#akomodasiModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
           <%= element.biaya_akomodasi %>
           <!-- Modal -->
-          <div class="modal fade" id="exampleModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="akomodasiModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-estimasi-klaim?_method=PUT" method="post">
+                <form action="/update-akomodasi-hasil-investigasi?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
-                    <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Biaya Akomodasi</label><br />
+                    <input class="form-control estimasi_awal" id="biaya_akomodasi" name="biaya_akomodasi" value="<%= element.biaya_akomodasi %>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="success_fee" name="success_fee" value="<%= element.success_fee %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -150,20 +186,22 @@
           <a href="#succesFeeModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <%= element.biaya_akomodasi %>
+          <%= element.success_fee%>
           <!-- Modal -->
           <div class="modal fade" id="succesFeeModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-estimasi-klaim?_method=PUT" method="post">
+                <form action="/update-success-fee-hasil-investigasi?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
-                    <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Success Fee</label><br />
+                    <input class="form-control estimasi_awal" id="success_fee" name="success_fee" value="<%= element.success_fee %>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="biaya_akomodasi" name="biaya_akomodasi" value="<%= element.biaya_akomodasi %>" hidden />
+                    <input class="form-control" id="total_tagihan" name="total_tagihan" value="<%= element.total_tagihan %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -174,56 +212,72 @@
             </div>
           </div>
         </td>
-        <td><%= element.total_tagihan %></td>
-        <td>
-          <a href="#tglPaymentModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
-            <i class="bi bi-pencil"></i>
-          </a>
-          <% if (element.tanggal_payment != null) { const day3 = element.tanggal_payment.getDate(); const month3 = element.tanggal_payment.getMonth(); const year3 = element.tanggal_payment.getFullYear(); formattedDate3 =
-          `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else { formattedDate3 = "-" } %> <%= formattedDate3 %>
-          <!-- Modal -->
-          <div class="modal fade" id="tglPaymentModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <form action="/update-followup1-investigasi?_method=PUT" method="post">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
-                    <label for="tanggal_feedback" class="col-form-label"> Follow Up 1</label>
-                    <input class="form-control" id="follow_up_1" name="follow_up_1" value="<%= element.follow_up_1 %>" type="date" />
-                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
-                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                  </div>
-                </form>
+        <% let tagihanValue = parseInt(element.total_tagihan.replace(/\./g, '')); totalTagihanValue = totalTagihanValue + tagihanValue %>
+        <td>Rp <%= element.total_tagihan %></td>
+        <%if (element.tanggal_terima_invoice != null) { %>
+          <td>
+            <a href="#tglPaymentModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <% if (element.tanggal_payment != null) { const day3 = element.tanggal_payment.getDate(); const month3 = element.tanggal_payment.getMonth(); const year3 = element.tanggal_payment.getFullYear(); formattedDate3 =
+            `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else { formattedDate3 = "-" } %> <%= formattedDate3 %>
+            <!-- Modal -->
+            <div class="modal fade" id="tglPaymentModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <form action="/update-tgl-payment-hasil-investigasi?_method=PUT" method="post">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <% let oldPayment = new Date(element.tanggal_payment)%>
+                      <% var dd = String(oldPayment.getDate()).padStart(2, '0');
+                        var mm = String(oldPayment.getMonth() + 1).padStart(2, '0'); // Januari adalah 0!
+                        var yyyy = oldPayment.getFullYear();
+                        oldPayment = yyyy + '-' + mm + '-' + dd;%>
+                      <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
+                      <label for="tanggal_feedback" class="col-form-label">Tanggal Payment</label>
+                      <input class="form-control" id="tanggal_payment" name="tanggal_payment" value="<%= oldPayment %>" type="date" />
+                      <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                      <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                      <input class="form-control" id="tanggal_terima_invoice" name="tanggal_terima_invoice" value="<%= element.tanggal_terima_invoice %>" hidden />
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-        </td>
+          </td>
+        <% } else { %> 
+          <td>
+            <a href="" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+              
+            </a>
+          </td>
+        <% }%>
         <td>
           <a href="#pdvModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <%= element.biaya_akomodasi %>
+          <%= element.pdv %>
           <!-- Modal -->
           <div class="modal fade" id="pdvModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-estimasi-klaim?_method=PUT" method="post">
+                <form action="/update-pdv-hasil-investigasi?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
-                    <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">PDV</label><br />
+                    <input class="form-control" id="pdv" name="pdv" value="<%= element.pdv %>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -243,15 +297,23 @@
           <div class="modal fade" id="statusPayModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-estimasi-klaim?_method=PUT" method="post">
+                <form action="/update-status-payment-hasil-investigasi?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
-                    <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
+                    <label for="sob" class="col-form-label">Status Payment</label>
+                    <div class="input-group mb-3">
+                      <select class="form-select" name="status_payment" id="status_payment">
+                        <option value="" <% if(element.status_payment == "") {%> selected <%}%> >BELUM DITENTUKAN</option>
+                        <option value="PAID" <% if(element.status_payment == "PAID") {%> selected <%}%> >PAID</option>
+                        <option value="UNPAID" <% if(element.status_payment == "UNPAID") {%> selected <%}%> >UNPAID</option>
+                      </select>
+                    </div>
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -262,7 +324,7 @@
             </div>
           </div>
         </td>
-        <td class="aging_payment" id="aging<%=element._id%>"><a href="#" data-bs-toggle="popover" data-bs-title="<%=element.no_klaim%>" data-bs-content='Aging'><%=element.aging%></a></td>
+        <td class="aging_payment" id="aging<%=element._id%>"><a href="#" data-bs-toggle="popover" data-bs-title="<%=element.no_klaim%>" data-bs-content='Aging'><%=element.aging_payment%></a></td>
         <td class="text-center">
           <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-trash"></i>
@@ -295,6 +357,26 @@
       </tr>
       <% j++}); %>
     </tbody>
+    <tfoot class="table-warning">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Rp <%=totalEstimasi.toLocaleString('id-ID')%></td>
+        <td></td>
+        <td></td>
+        <td>Rp <%=totalTagihanValue.toLocaleString('id-ID')%> </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tfoot>
   </table>
   <% } %>
 </div>

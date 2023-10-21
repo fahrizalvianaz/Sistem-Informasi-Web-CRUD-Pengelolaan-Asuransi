@@ -53,7 +53,31 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_feedback" class="col-form-label"> Tanggal Terima LHS</label>
+                    <input type="hidden" id="nopolis" name="no_polis" value="<%= element.no_polis %>" />
+                    <input type="hidden" id="branch" name="branch" value="<%= element.branch %>" />
+                    <input type="hidden" name="no_klaim" value="<%= element.no_klaim %>" />
+                    <input type="hidden" name="sob" value="<%= element.sob %>" />
+                    <input type="hidden" name="plat_nomor" value="<%= element.plat_nomor %>" />
+                    <input type="hidden" name="tsi" value="<%= element.tsi %>" />
+                    <input type="hidden" name="dol" value="<%= element.dol %>" />
+                    <input type="hidden" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
+                    <input type="hidden" name="keterangan" value="<%= element.keterangan%>" />
+                    <input type="hidden" name="reserve_amt" value="<%= element.reserve_amt %>" />
+                    <% for( let i = 0; i < element.status.length; i++ ) { %>
+                      <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
+                    <% } %>
+                    <input type="hidden" name="status" value="Investigasi & Pembayaran" />
+                    <input type="hidden" name="investigator" value="<%= element.investigator %>" />
+                    <input type="hidden" name="tanggal_kirim_surat" value="<%= element.tanggal_kirim_surat %>" />
+                    <input type="hidden" name="nomor_kirim_surat" value="<%= element.nomor_kirim_surat %>" />
+                    <input type="hidden" name="follow_up_1" value="<%= element.follow_up_1 %>" />
+                    <input type="hidden" name="follow_up_2" value="<%= element.follow_up_2 %>" />
+                    <input type="hidden" name="follow_up_3" value="<%= element.follow_up_3 %>" />
+                    <input type="hidden" name="follow_up_4" value="<%= element.follow_up_4 %>" />
+                    <input type="hidden" name="aging_investigasi" value="<%= element.aging %>" />
+                    <input type="hidden" name="biaya_akomodasi" value="Rp 0" />
+                    <input type="hidden" name="success_fee" value="Rp 0" />
+                    <label for="tanggal_feedback" class="col-form-label">Tanggal Terima LHS</label>
                     <input class="form-control" id="tanggal_terima_lhs" name="tanggal_terima_lhs" type="date" />
                     <label for="recipient-name" class="col-form-label">Hasil Investigasi</label>              
                     <div class="input-group mb-3">
@@ -62,8 +86,6 @@
                         <option value="Not Claimable">Not Claimable</option>
                       </select>
                     </div>
-                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
-                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
