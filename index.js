@@ -457,6 +457,26 @@ app.put("/update-status-done-surat-tolak", async (req, res) => {
     });
 });
 
+// Update reserve amt final rejection
+app.put("/update-reserve-amt-final-closed", async (req, res) => {
+  await finalClosed
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          reserve_amt: req.body.reserve_amt,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/final-closed");
+    });
+});
+
+
 // Update estimasi investigasi
 app.put("/update-estimasi-investigasi", async (req, res) => {
   await investigasi

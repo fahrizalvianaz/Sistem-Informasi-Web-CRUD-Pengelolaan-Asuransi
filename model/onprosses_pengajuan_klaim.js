@@ -888,4 +888,53 @@ const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
   },
 });
 
+
+const xol = mongoose.model("xol", {
+  no_polis: {
+    type: String,
+    required: true,
+  },
+  branch: {
+    type: String,
+    required: true,
+  },
+  no_klaim: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  sob: {
+    type: String,
+    required: true,
+  },
+  plat_nomor: {
+    type: String,
+    required: true,
+  },
+  tsi: {
+    type: String,
+    required: true,
+  },
+  dol: {
+    type: Date,
+    required: true,
+  },
+  estimasi_awal: {
+    type: String,
+    required: false,
+  },
+  reserve_amt: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  keterangan: {
+    type: String,
+    required: false,
+  },
+});
+
 export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed, hasilInvestigasi };

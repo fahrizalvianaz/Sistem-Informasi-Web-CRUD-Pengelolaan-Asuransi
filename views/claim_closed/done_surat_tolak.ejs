@@ -59,7 +59,7 @@
                       <% for( let i = 0; i < element.status.length; i++ ) { %>
                       <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
                       <% } %>
-                      <input class="form-control" id="status" name="status" type="text" hidden value="Closed Reas" />
+                      <input class="form-control" id="status" name="status" type="text" hidden value="Final Rejection" />
                       <p>Pindah ke final closed ? </p>
                     </div>
                     <div class="modal-footer">
@@ -102,7 +102,7 @@
                       <% for( let i = 0; i < element.status.length; i++ ) { %>
                       <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
                       <% } %>
-                      <input class="form-control" id="status" name="status" type="text" hidden value="Closed Reas" />
+                      <input class="form-control" id="status" name="status" type="text" hidden value="Final Rejection" />
                       <button type="submit" class="btn btn-danger">Ditolak</button>
                     </form>
                     <a href="#diterima<%=element._id%>" data-bs-toggle="modal"><button type="submit" class="btn btn-primary">Diterima</button></a>

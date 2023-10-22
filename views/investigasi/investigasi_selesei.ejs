@@ -90,7 +90,7 @@
           <a href="#estimasiModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} %>
+          <% if(element.estimasi_awal != null) { const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} }%>
           <%= element.estimasi_awal%>
           <!-- Modal -->
           <div class="modal fade" id="estimasiModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -212,7 +212,7 @@
             </div>
           </div>
         </td>
-        <% let tagihanValue = parseInt(element.total_tagihan.replace(/\./g, '')); totalTagihanValue = totalTagihanValue + tagihanValue %>
+        <% if (element.total_tagihan != null){let tagihanValue = parseInt(element.total_tagihan.replace(/\./g, '')); totalTagihanValue = totalTagihanValue + tagihanValue } %>
         <td>Rp <%= element.total_tagihan %></td>
         <%if (element.tanggal_terima_invoice != null) { %>
           <td>
@@ -368,6 +368,7 @@
         <td></td>
         <td></td>
         <td>Rp <%=totalEstimasi.toLocaleString('id-ID')%></td>
+        <td></td>
         <td></td>
         <td></td>
         <td>Rp <%=totalTagihanValue.toLocaleString('id-ID')%> </td>

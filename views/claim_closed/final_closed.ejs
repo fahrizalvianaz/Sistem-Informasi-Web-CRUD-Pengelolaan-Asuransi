@@ -35,7 +35,7 @@
       </tr>
     </thead>
     <tbody>
-      <% let j = 1; ddcData.forEach(element => { %>
+      <% let j = 1; let totalReserve = 0; ddcData.forEach(element => { %>
       <tr>
         <td><%= j %></td>
         <td>
@@ -45,7 +45,34 @@
         <td><%= element.sob %></td>
         <td><%= element.tsi %></td>
         <td><%= element.estimasi_awal %></td>
-        <td><%= element.reserve_amt %></td>
+        <% const reserveValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %> <% if(!isNaN(reserveValue)) {totalReserve = totalReserve + reserveValue} %>
+        <td><a href="#reserveModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <%= element.reserve_amt %>
+          <!-- Modal -->
+          <div class="modal fade" id="reserveModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-reserve-amt-final-closed?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Biaya Akomodasi</label><br />
+                    <input class="form-control estimasi_awal" id="reserve_amt" name="reserve_amt" value="<%= element.reserve_amt %>" />
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="success_fee" name="success_fee" value="<%= element.success_fee %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div></td>
         <% const day = element.tanggal_terima_surat_tolak.getDate(); const month = element.tanggal_terima_surat_tolak.getMonth() + 1; const year = element.tanggal_terima_surat_tolak.getFullYear(); const formattedDate =
         `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
         <td><%= formattedDate %></td>
@@ -91,6 +118,20 @@
       </tr>
       <% j++}); %>
     </tbody>
+    <tfoot class="table-warning">
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td>Rp <%= totalReserve.toLocaleString('id-ID')%></td> 
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td></td> 
+        <td></td> 
+    </tfoot>
   </table>
   <% } %>
 </div>
