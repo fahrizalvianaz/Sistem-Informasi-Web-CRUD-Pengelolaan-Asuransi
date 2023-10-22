@@ -1,0 +1,217 @@
+<h1 class="title">FOB <span class="badge bg-secondary"><%= count %></span></h1>
+<ul class="breadcrumbs">
+  <li><a href="#">PLA/DLA</a></li>
+  <li class="divider">/</li>
+  <li><a href="#" class="active">FOB</a></li>
+</ul>
+<% let i = 1; if (msg.length !== 0) { %>
+<div class="alert alert-success" role="alert"><%= msg %></div>
+<% } %>
+<div class="info-data table-responsive">
+  <table class="table table-bordered table-container">
+    <thead class="table-primary">
+      <tr class="text-center">
+        <th scope="col">No</th>
+        <th scope="col">Claim No.</th>
+        <th scope="col">Claimant</th>
+        <th scope="col">SOB</th>
+        <th scope="col">DOL</th>
+        <th scope="col">Tgl Kirim Reas</th>
+        <th scope="col">TSI</th>
+        <th scope="col">Our Share</th>
+        <th scope="col">OR</th>
+        <th scope="col">FOB</th>
+        <th scope="col">Keterangan</th>
+        <th scope="col">Status</th>
+        <th scope="col">x</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let totalOR = 0; dataFOB.forEach(element => { %>
+      <tr>
+        <td><%=i%></td>
+        <td><%=element.no_klaim%></td>
+        <td><%= element.plat_nomor %></td>
+        <td><%= element.sob %></td>
+        <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+        <td><%= formattedDate %></td>
+        <% const day1 = element.tanggal_kirim_reas.getDate(); const month1 = element.tanggal_kirim_reas.getMonth(); const year1 = element.tanggal_kirim_reas.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2,
+        '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
+        <td><%= formattedDate1 %></td>
+        <td><%= element.tsi %></td>
+        <td id="estimasiAwal">
+          <a href="#ourShareModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i> </a> <%=
+          element.our_share %>
+          <!-- Modal -->
+          <div class="modal fade" id="ourShareModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-our-share-fob?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Our Share</label><br />
+                    <input class="form-control estimasi_awal" id="our_share" name="our_share" value="<%= element.our_share %>" />
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    <input class="form-control" id="or" name="or" value="<%= element.or %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td id="estimasiAwal">
+          <% const orValue = parseInt(element.or.replace(/[^0-9]/g, "")); %> <% if(!isNaN(orValue)) {totalOR = totalOR + orValue} %>
+          <a href="#orModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i> </a> <%=
+          element.or %>
+          <!-- Modal -->
+          <div class="modal fade" id="orModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-or-fob?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">OR</label><br />
+                    <input class="form-control estimasi_awal" id="or" name="or" value="<%= element.or %>" />
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    <input class="form-control" id="our_share" name="our_share" value="<%= element.our_share %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>Rp <%= element.fob %></td>
+        <td>
+          <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <%= element.keterangan %>
+          <!-- Modal -->
+          <div class="modal fade" id="ketModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-keterangan-fob?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan" style="height: 100px" required><%= element.keterangan %></textarea>
+                      <label for="floatingTextarea2">Tambah keterangan</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+        <a href="#statusfob<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+        </a>
+        <%= element.status_fob%>
+          <!-- Modal -->
+          <div class="modal fade" id="statusfob<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-status-fob?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
+                    <label for="sob" class="col-form-label">Status</label>
+                    <div class="input-group mb-3">
+                      <select class="form-select" name="status_fob" id="status_fob">
+                        <option value="OPEN-RESV" <% if(element.status_xol == "OPEN-RESV") {%> selected <%}%> >OPEN-RESV</option>
+                        <option value="STTL-FULL" <% if(element.status_xol == "STTL-FULL") {%> selected <%}%> >STTL-FULL</option>
+                        <option value="STTL-PART" <% if(element.status_xol == "STTL-PART") {%> selected <%}%> >STTL-PART</option>
+                        <option value="CANC-REJT" <% if(element.status_xol == "CANC-REJT") {%> selected <%}%> >CANC-REJT</option>
+                        <option value="CANC-WITH" <% if(element.status_xol == "CANC-WITH") {%> selected <%}%> >CANC-WITH</option>
+                      </select>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="text-center">
+          <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-trash"></i>
+          </a>
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/delete-claim-rejection?_method=DELETE" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus <%=element.no_klaim %>?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan_hapus" style="height: 100px" required></textarea>
+                      <label for="floatingTextarea2">Alasan dihapus...</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% i++;}); %>
+    </tbody>
+    <tfoot class="table-warning">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Rp <%= totalOR.toLocaleString('id-ID') %></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tfoot>
+  </table>
+</div>

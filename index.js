@@ -2,7 +2,23 @@ import express from "express";
 import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
 import "./utils/db.js";
-import { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, pengajuanSPKAtl, spgrlod, doneSpgrPayment, finalClosed, hasilInvestigasi } from "./model/onprosses_pengajuan_klaim.js";
+import {
+  pengajuanKlaim,
+  claimClosed,
+  investigasi,
+  pengajuanSPK,
+  doneSuratTolak,
+  pengajuanSPKPartial,
+  pengajuanSPKCtl,
+  pengajuanSPKAtl,
+  spgrlod,
+  doneSpgrPayment,
+  finalClosed,
+  hasilInvestigasi,
+  xol,
+  fob,
+  coins
+} from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
 import session from "express-session";
@@ -69,6 +85,43 @@ app.get("/final-closed", async (req, res) => {
     msg: req.flash("msg"),
   });
 });
+
+app.get("/xol", async (req, res) => {
+  // res.send(dueDateClosed);
+  const dataXOL = await xol.find();
+  const count = await xol.countDocuments();
+  res.render("pladla/xol", {
+    layout: "layouts/main_layout",
+    dataXOL,
+    count,
+    msg: req.flash("msg"),
+  });
+});
+
+app.get("/fob", async (req, res) => {
+  // res.send(dueDateClosed);
+  const dataFOB = await fob.find();
+  const count = await fob.countDocuments();
+  res.render("pladla/fob", {
+    layout: "layouts/main_layout",
+    dataFOB,
+    count,
+    msg: req.flash("msg"),
+  });
+});
+
+app.get("/coins", async (req, res) => {
+  // res.send(dueDateClosed);
+  const dataCOINS = await coins.find();
+  const count = await coins.countDocuments();
+  res.render("pladla/coins", {
+    layout: "layouts/main_layout",
+    dataCOINS,
+    count,
+    msg: req.flash("msg"),
+  });
+});
+
 app.get("/onprosses-investigasi", async (req, res) => {
   // const investigator = await investigasi.find();
   const investigatorNames = await investigasi.distinct("investigator");
@@ -476,7 +529,6 @@ app.put("/update-reserve-amt-final-closed", async (req, res) => {
     });
 });
 
-
 // Update estimasi investigasi
 app.put("/update-estimasi-investigasi", async (req, res) => {
   await investigasi
@@ -667,7 +719,6 @@ app.put("/update-status-payment-hasil-investigasi", async (req, res) => {
     });
 });
 
-
 // Update status payment hasil investigasi
 app.put("/update-estimasi-hasil-investigasi", async (req, res) => {
   await hasilInvestigasi
@@ -686,6 +737,460 @@ app.put("/update-estimasi-hasil-investigasi", async (req, res) => {
       res.redirect("/hasil-investigasi");
     });
 });
+
+// Update our share xol
+app.put("/update-our-share", async (req, res) => {
+  await xol
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          our_share: req.body.our_share,
+        },
+      }
+    )
+    .then(async (result) => {
+      let nettKlaim = 0;
+      let salvageValue = parseInt(req.body.nilai_salvage.replace(/[^0-9]/g, ""));
+      let ourShareValue = parseInt(req.body.our_share.replace(/[^0-9]/g, ""));
+
+      if (isNaN(salvageValue)) {
+        salvageValue = 0;
+      }
+      if (isNaN(ourShareValue)) {
+        ourShareValue = 0;
+      }
+      nettKlaim = ourShareValue - salvageValue;
+
+      await xol
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              nett_klaim: nettKlaim.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          let orValue = parseInt(req.body.or.replace(/[^0-9]/g, ""));
+          let selisih = nettKlaim - orValue;
+          if (selisih < 0) {
+            selisih = 0;
+          }
+          await xol
+            .updateOne(
+              {
+                _id: req.body._id,
+              },
+              {
+                $set: {
+                  selisih: selisih.toLocaleString("id-ID"),
+                },
+              }
+            )
+            .then((result) => {
+              req.flash("msg", "Data berhasil diubah !");
+              res.redirect("/xol");
+            });
+        });
+    });
+});
+
+// Update salvage xol
+app.put("/update-nilai-salvage-pladla", async (req, res) => {
+  await xol
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          nilai_salvage: req.body.nilai_salvage,
+        },
+      }
+    )
+    .then(async (result) => {
+      let nettKlaim = 0;
+      let salvageValue = parseInt(req.body.nilai_salvage.replace(/[^0-9]/g, ""));
+      let ourShareValue = parseInt(req.body.our_share.replace(/[^0-9]/g, ""));
+
+      if (isNaN(salvageValue)) {
+        salvageValue = 0;
+      }
+      if (isNaN(ourShareValue)) {
+        ourShareValue = 0;
+      }
+      nettKlaim = ourShareValue - salvageValue;
+      await xol
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              nett_klaim: nettKlaim.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          let orValue = parseInt(req.body.or.replace(/[^0-9]/g, ""));
+          let selisih = nettKlaim - orValue;
+          if (selisih < 0) {
+            selisih = 0;
+          }
+          await xol
+            .updateOne(
+              {
+                _id: req.body._id,
+              },
+              {
+                $set: {
+                  selisih: selisih.toLocaleString("id-ID"),
+                },
+              }
+            )
+            .then((result) => {
+              req.flash("msg", "Data berhasil diubah !");
+              res.redirect("/xol");
+            });
+        });
+    });
+});
+
+
+
+// Update status xol
+app.put("/update-status-xol", async (req, res) => {
+  await xol
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_xol: req.body.status_xol,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/xol");
+    });
+});
+// Update keterangan xol
+app.put("/update-keterangan-xol", async (req, res) => {
+  await xol
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan: req.body.keterangan,
+        },
+      }
+    )
+    .then(async (result) => {
+      await pengajuanKlaim
+        .updateOne(
+          {
+            no_klaim: req.body.no_klaim,
+          },
+          {
+            $set: {
+              keterangan: req.body.keterangan,
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/xol");
+        });
+    });
+});
+
+
+// Update our share fob
+app.put("/update-our-share-fob", async (req, res) => {
+  await fob
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          our_share: req.body.our_share,
+        },
+      }
+    )
+    .then(async (result) => {
+      let fobValue = 0;
+      let orValue = parseInt(req.body.or.replace(/[^0-9]/g, ""));
+      let ourShareValue = parseInt(req.body.our_share.replace(/[^0-9]/g, ""));
+
+      if (isNaN(orValue)) {
+        orValue = 0;
+      }
+      if (isNaN(ourShareValue)) {
+        ourShareValue = 0;
+      }
+      fobValue = ourShareValue - orValue;
+      await fob
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              fob: fobValue.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/fob");
+        });
+    });
+});
+
+// Update or fob
+app.put("/update-or-fob", async (req, res) => {
+  await fob
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          or: req.body.or,
+        },
+      }
+    )
+    .then(async (result) => {
+      let fobValue = 0;
+      let orValue = parseInt(req.body.or.replace(/[^0-9]/g, ""));
+      let ourShareValue = parseInt(req.body.our_share.replace(/[^0-9]/g, ""));
+
+      if (isNaN(orValue)) {
+        orValue = 0;
+      }
+      if (isNaN(ourShareValue)) {
+        ourShareValue = 0;
+      }
+      fobValue = ourShareValue - orValue;
+      await fob
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              fob: fobValue.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/fob");
+        });
+    });
+});
+
+// Update keterangan fob
+app.put("/update-keterangan-fob", async (req, res) => {
+  await fob
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan: req.body.keterangan,
+        },
+      }
+    )
+    .then(async (result) => {
+      await pengajuanKlaim
+        .updateOne(
+          {
+            no_klaim: req.body.no_klaim,
+          },
+          {
+            $set: {
+              keterangan: req.body.keterangan,
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/fob");
+        });
+    });
+});
+
+// Update status fob
+app.put("/update-status-fob", async (req, res) => {
+  await fob
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_fob: req.body.status_fob,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/fob");
+    });
+});
+
+
+// Update our share coins
+app.put("/update-our-share-coins", async (req, res) => {
+  await coins
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          our_share: req.body.our_share,
+        },
+      }
+    )
+    .then(async (result) => {
+      let coinsValue = 0;
+      let orValue = parseInt(req.body.or.replace(/[^0-9]/g, ""));
+      let ourShareValue = parseInt(req.body.our_share.replace(/[^0-9]/g, ""));
+
+      if (isNaN(orValue)) {
+        orValue = 0;
+      }
+      if (isNaN(ourShareValue)) {
+        ourShareValue = 0;
+      }
+      coinsValue = ourShareValue - orValue;
+      await coins
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              coins: coinsValue.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/coins");
+        });
+    });
+});
+
+// Update or coins
+app.put("/update-or-coins", async (req, res) => {
+  await coins
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          or: req.body.or,
+        },
+      }
+    )
+    .then(async (result) => {
+      let coinsValue = 0;
+      let orValue = parseInt(req.body.or.replace(/[^0-9]/g, ""));
+      let ourShareValue = parseInt(req.body.our_share.replace(/[^0-9]/g, ""));
+
+      if (isNaN(orValue)) {
+        orValue = 0;
+      }
+      if (isNaN(ourShareValue)) {
+        ourShareValue = 0;
+      }
+      coinsValue = ourShareValue - orValue;
+      await coins
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              coins: coinsValue.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/coins");
+        });
+    });
+});
+
+// Update keterangan coins
+app.put("/update-keterangan-coins", async (req, res) => {
+  await coins
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan: req.body.keterangan,
+        },
+      }
+    )
+    .then(async (result) => {
+      await pengajuanKlaim
+        .updateOne(
+          {
+            no_klaim: req.body.no_klaim,
+          },
+          {
+            $set: {
+              keterangan: req.body.keterangan,
+            },
+          }
+        )
+        .then((result) => {
+          req.flash("msg", "Data berhasil diubah !");
+          res.redirect("/coins");
+        });
+    });
+});
+
+
+// Update status xol
+app.put("/update-status-coins", async (req, res) => {
+  await coins
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          status_coins: req.body.status_coins,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/coins");
+    });
+});
+
+
 // Update  tanggal payment hasil investigasi
 app.put("/update-tgl-payment-hasil-investigasi", async (req, res) => {
   const tglInvoice = new Date(req.body.tanggal_terima_invoice);
@@ -781,7 +1286,7 @@ app.put("/update-akomodasi-hasil-investigasi", async (req, res) => {
           },
           {
             $set: {
-              total_tagihan: totalTagihan.toLocaleString('id-ID'),
+              total_tagihan: totalTagihan.toLocaleString("id-ID"),
             },
           }
         )
@@ -825,7 +1330,7 @@ app.put("/update-success-fee-hasil-investigasi", async (req, res) => {
           },
           {
             $set: {
-              total_tagihan: totalTagihan.toLocaleString('id-ID'),
+              total_tagihan: totalTagihan.toLocaleString("id-ID"),
             },
           }
         )
@@ -1339,6 +1844,46 @@ app.post("/tambah-spk", async (req, res) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
         res.redirect("/klaim/pengajuan-spk");
       });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.post("/tambah-xol", async (req, res) => {
+  // res.send(req.body);
+  xol
+    .insertMany(req.body)
+    .then(function () {
+      req.flash("msg", "Data berhasil ditambahkan ke xol !");
+      res.redirect("/xol");
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+
+app.post("/tambah-fob", async (req, res) => {
+  // res.send(req.body);
+  fob
+    .insertMany(req.body)
+    .then(function () {
+      req.flash("msg", "Data berhasil ditambahkan ke fob !");
+      res.redirect("/fob");
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.post("/tambah-coins", async (req, res) => {
+  // res.send(req.body);
+  coins
+    .insertMany(req.body)
+    .then(function () {
+      req.flash("msg", "Data berhasil ditambahkan ke coins !");
+      res.redirect("/coins");
     })
     .catch(function (err) {
       console.log(err);
