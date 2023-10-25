@@ -22,7 +22,7 @@
         <th scope="col">Nilai Salvage</th>
         <th scope="col">Nett Claim</th>
         <th scope="col">OR</th>
-        <th scope="col">Selisih <a href="/sorting-selisih-xol"><i class="bi bi-sort-numeric-down ms-2" style="color: black;"></i></a></th>
+        <th scope="col">Selisih <a href="#"><i class="bi bi-sort-numeric-down ms-2" style="color: white;"></i></a></th>
         <th scope="col">Keterangan</th>
         <th scope="col">Status</th>
         <th scope="col">x</th>
@@ -102,8 +102,8 @@
         <td>Rp <%= element.nett_klaim %></td>
         <% const orValue = parseInt(element.or.replace(/[^0-9]/g, "")); totalOR = totalOR + orValue; %>
         <td><%= element.or %></td>
-        <% const selisihValue = parseInt(element.selisih.replace(/[^0-9]/g, "")); %> <% if(!isNaN(selisihValue)) {totalSelisih= totalSelisih+ selisihValue} %>
-        <td>Rp <%= element.selisih %> </td>
+        <% const selisihValue = element.selisih; %> <% if(!isNaN(selisihValue)) {totalSelisih= totalSelisih+ selisihValue} %>
+        <td>Rp <%= element.selisih.toLocaleString('id-ID') %> </td>
         <td>
           <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
@@ -181,17 +181,18 @@
           <div class="modal fade" id="deleteModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/delete-claim-rejection?_method=DELETE" method="post">
+                <form action="/delete-xol?_method=DELETE" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus <%=element.no_klaim %>?</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <div class="form-floating">
-                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan_hapus" style="height: 100px" required></textarea>
+                      <textarea class="form-control" placeholder="Leave a comment here" id="alasan" name="alasan" style="height: 100px" required></textarea>
                       <label for="floatingTextarea2">Alasan dihapus...</label>
                     </div>
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

@@ -174,17 +174,18 @@
           <div class="modal fade" id="deleteModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/delete-claim-rejection?_method=DELETE" method="post">
+                <form action="/delete-coins?_method=DELETE" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus <%=element.no_klaim %>?</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <div class="form-floating">
-                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan_hapus" style="height: 100px" required></textarea>
+                      <textarea class="form-control" placeholder="Leave a comment here" id="alasan" name="alasan" style="height: 100px" required></textarea>
                       <label for="floatingTextarea2">Alasan dihapus...</label>
                     </div>
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

@@ -574,7 +574,15 @@ table {
   width: 100%; /* Tabel akan mengisi lebar container */
   /* Gaya lain sesuai kebutuhan */
 }
+table th {
+  background-color: #1775f1 !important;
+  color: #fff !important;
+}
 
+tfoot td {
+  background-color: #e4a11b !important;
+  color: #fff !important;
+}
 /* MAIN */
 /* CONTENT */
 

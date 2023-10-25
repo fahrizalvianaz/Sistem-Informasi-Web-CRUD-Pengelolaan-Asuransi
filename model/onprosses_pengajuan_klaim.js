@@ -960,7 +960,7 @@ const xol = mongoose.model("xol", {
     required: false,
   },
   selisih: {
-    type: String,
+    type: Number,
     required: false,
   },
 });
@@ -1100,4 +1100,17 @@ const coins = mongoose.model("coins", {
   },
 });
 
-export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed, hasilInvestigasi, xol, fob, coins };
+const deleteBucket = mongoose.model("delete_bucket", {
+  no_klaim: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  alasan: {
+    type: String,
+    required: true,
+  },
+});
+
+
+export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed, hasilInvestigasi, xol, fob, coins, deleteBucket };

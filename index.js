@@ -17,7 +17,8 @@ import {
   hasilInvestigasi,
   xol,
   fob,
-  coins
+  coins,
+  deleteBucket,
 } from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
@@ -88,7 +89,7 @@ app.get("/final-closed", async (req, res) => {
 
 app.get("/xol", async (req, res) => {
   // res.send(dueDateClosed);
-  const dataXOL = await xol.find();
+  const dataXOL = await xol.find().sort({ selisih: 1 });
   const count = await xol.countDocuments();
   res.render("pladla/xol", {
     layout: "layouts/main_layout",
@@ -296,6 +297,18 @@ app.get("/spgrlod/done", async (req, res) => {
   res.render("spgrlod/done_spgrlod_payment", {
     layout: "layouts/main_layout",
     data,
+    count,
+    msg: req.flash("msg"),
+  });
+});
+
+app.get("/delete", async (req, res) => {
+  // res.send(dueDateClosed);
+  const dataDelete = await deleteBucket.find();
+  const count = await deleteBucket.countDocuments();
+  res.render("delete/delete", {
+    layout: "layouts/second_layout",
+    dataDelete,
     count,
     msg: req.flash("msg"),
   });
@@ -788,7 +801,7 @@ app.put("/update-our-share", async (req, res) => {
               },
               {
                 $set: {
-                  selisih: selisih.toLocaleString("id-ID"),
+                  selisih: selisih,
                 },
               }
             )
@@ -849,7 +862,7 @@ app.put("/update-nilai-salvage-pladla", async (req, res) => {
               },
               {
                 $set: {
-                  selisih: selisih.toLocaleString("id-ID"),
+                  selisih: selisih,
                 },
               }
             )
@@ -860,8 +873,6 @@ app.put("/update-nilai-salvage-pladla", async (req, res) => {
         });
     });
 });
-
-
 
 // Update status xol
 app.put("/update-status-xol", async (req, res) => {
@@ -912,7 +923,6 @@ app.put("/update-keterangan-xol", async (req, res) => {
         });
     });
 });
-
 
 // Update our share fob
 app.put("/update-our-share-fob", async (req, res) => {
@@ -1051,7 +1061,6 @@ app.put("/update-status-fob", async (req, res) => {
     });
 });
 
-
 // Update our share coins
 app.put("/update-our-share-coins", async (req, res) => {
   await coins
@@ -1170,7 +1179,6 @@ app.put("/update-keterangan-coins", async (req, res) => {
     });
 });
 
-
 // Update status xol
 app.put("/update-status-coins", async (req, res) => {
   await coins
@@ -1189,7 +1197,6 @@ app.put("/update-status-coins", async (req, res) => {
       res.redirect("/coins");
     });
 });
-
 
 // Update  tanggal payment hasil investigasi
 app.put("/update-tgl-payment-hasil-investigasi", async (req, res) => {
@@ -1726,6 +1733,7 @@ app.post(
       const duplikat1 = await pengajuanKlaim.findOne({ no_klaim: value });
       const duplikat2 = await claimClosed.findOne({ no_klaim: value });
       const duplikat3 = await investigasi.findOne({ no_klaim: value });
+      const duplikat12 = await hasilInvestigasi.findOne({ no_klaim: value });
       const duplikat4 = await pengajuanSPK.findOne({ no_klaim: value });
       const duplikat5 = await pengajuanSPKPartial.findOne({ no_klaim: value });
       const duplikat6 = await pengajuanSPKCtl.findOne({ no_klaim: value });
@@ -1735,7 +1743,7 @@ app.post(
       const duplikat10 = await spgrlod.findOne({ no_klaim: value });
       const duplikat11 = await doneSpgrPayment.findOne({ no_klaim: value });
 
-      if (duplikat1 || duplikat2 || duplikat3 || duplikat4 || duplikat5 || duplikat6 || duplikat7 || duplikat8 || duplikat9 || duplikat10 || duplikat11) {
+      if (duplikat1 || duplikat2 || duplikat3 || duplikat4 || duplikat5 || duplikat6 || duplikat7 || duplikat8 || duplikat9 || duplikat10 || duplikat11 || duplikat12) {
         throw new Error("No klaim sudah digunakan ");
       } else if (value.length < 15) {
         throw new Error("No klaim kurang dari 14 karakter");
@@ -1862,7 +1870,6 @@ app.post("/tambah-xol", async (req, res) => {
       console.log(err);
     });
 });
-
 
 app.post("/tambah-fob", async (req, res) => {
   // res.send(req.body);
@@ -2021,10 +2028,254 @@ app.post("/batal-ctl", async (req, res) => {
 
 // Delete
 app.delete("/delete-klaim", (req, res) => {
-  pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-    res.redirect("/klaim");
-  });
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        xol.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          fob.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            coins.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+              req.flash("msg", "Data berhasil didelete !");
+              res.redirect("/klaim");
+            });
+          });
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 });
+
+app.delete("/delete-spk", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      pengajuanSPK.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/klaim/pengajuan-spk");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+
+app.delete("/delete-spk-partial", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      pengajuanSPKPartial.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/klaim/spk-partial");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-spk-atl", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      pengajuanSPKAtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil didelete !");
+            res.redirect("/klaim/spk-atl");
+          });
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+
+app.delete("/delete-spk-ctl", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil didelete !");
+            res.redirect("/klaim/spk-ctl");
+          });
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-claim-investigasi", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      investigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/onprosses-investigasi");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-claim-selesai-investigasi", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      hasilInvestigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/hasil-investigasi");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-claim-rejection", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/onprosses-claimclosed");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-done-surat-tolak", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/done-surat-tolak");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+
+app.delete("/delete-final-closed", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      finalClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        req.flash("msg", "Data berhasil didelete !");
+        res.redirect("/final-closed");
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-spgrlod", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        pengajuanSPKAtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil didelete !");
+            res.redirect("/spgrlod/onprosses");
+          });
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-done-spgrlod", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        pengajuanSPKAtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil didelete !");
+            res.redirect("/spgrlod/done");
+          });
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-xol", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      xol.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          req.flash("msg", "Data berhasil didelete !");
+          res.redirect("/xol");
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-fob", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      fob.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          req.flash("msg", "Data berhasil didelete !");
+          res.redirect("/fob");
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+app.delete("/delete-coins", (req, res) => {
+  deleteBucket
+    .insertMany(req.body)
+    .then(function () {
+      coins.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+        pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+          req.flash("msg", "Data berhasil didelete !");
+          res.redirect("/coins");
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});
+
+app.delete("/delete-permanent", (req, res) => {
+  deleteBucket.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+    req.flash("msg", "Data berhasil didelete secara permanent!");
+    res.redirect("/delete");
+  }).catch(function (err) {
+      console.log(err);
+    });
+});
+
 
 // Jadwalkan pembaruan data setiap hari
 io.on("connection", async (socket) => {
