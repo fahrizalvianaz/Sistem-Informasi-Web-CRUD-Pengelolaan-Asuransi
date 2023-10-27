@@ -19,6 +19,7 @@ import {
   fob,
   coins,
   deleteBucket,
+  user,
 } from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
@@ -26,8 +27,8 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import cron from "node-cron";
-import { WebSocketServer } from "ws";
 import http from "http";
+import bcrypt from "bcrypt";
 import { Server } from "socket.io";
 
 const app = express();
@@ -52,6 +53,18 @@ app.use(
 app.use(flash());
 
 // GET
+
+app.get("/auth/login", async (req, res) => {
+  res.render("auth/index", {
+    layout: "layouts/second_layout",
+    msg: req.flash("msg"),
+  });
+});
+
+app.get("/logout", async (req, res) => {
+  res.redirect('/auth/login');
+});
+
 // Halaman Klaim
 app.get("/klaim", async (req, res) => {
   const pengajuanklaim = await pengajuanKlaim.find();
@@ -1795,6 +1808,49 @@ app.post(
   }
 );
 
+// Validasi User
+app.post(
+  "/validasi-user",[
+  body("password").custom(async (value) => {
+    const userLogin = await user.find();
+    let passwordDB = "";
+    userLogin.forEach((e) => {
+      passwordDB = e.password;
+    });
+    const isPasswordValid = await bcrypt.compare(value, passwordDB);
+    if (!isPasswordValid) {
+      throw new Error("Invalid password");
+    }
+    return true;
+  }),
+  body("username").custom(async (value) => {
+    const userLogin = await user.find();
+    let usernameDB = "";
+    userLogin.forEach((e) => {
+      usernameDB = e.username;
+    });
+    if (value != usernameDB) {
+      throw new Error("Invalid username");
+    }
+    return true;
+  }),
+  
+],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render("auth/index", {
+        layout: "layouts/second_layout",
+        errors: errors.array(),
+      });
+    } else {
+      req.flash("msg", "Berhasil Login");
+      res.redirect("/klaim");
+    }
+  }
+);
+
 // onprosses claim closed
 app.post("/tambah-claim-closed", async (req, res) => {
   // res.send(req.body);
@@ -2061,7 +2117,6 @@ app.delete("/delete-spk", (req, res) => {
     });
 });
 
-
 app.delete("/delete-spk-partial", (req, res) => {
   deleteBucket
     .insertMany(req.body)
@@ -2093,7 +2148,6 @@ app.delete("/delete-spk-atl", (req, res) => {
       console.log(err);
     });
 });
-
 
 app.delete("/delete-spk-ctl", (req, res) => {
   deleteBucket
@@ -2168,7 +2222,6 @@ app.delete("/delete-done-surat-tolak", (req, res) => {
       console.log(err);
     });
 });
-
 
 app.delete("/delete-final-closed", (req, res) => {
   deleteBucket
@@ -2268,14 +2321,16 @@ app.delete("/delete-coins", (req, res) => {
 });
 
 app.delete("/delete-permanent", (req, res) => {
-  deleteBucket.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-    req.flash("msg", "Data berhasil didelete secara permanent!");
-    res.redirect("/delete");
-  }).catch(function (err) {
+  deleteBucket
+    .deleteOne({ no_klaim: req.body.no_klaim })
+    .then((result) => {
+      req.flash("msg", "Data berhasil didelete secara permanent!");
+      res.redirect("/delete");
+    })
+    .catch(function (err) {
       console.log(err);
     });
 });
-
 
 // Jadwalkan pembaruan data setiap hari
 io.on("connection", async (socket) => {

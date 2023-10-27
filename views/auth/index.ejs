@@ -1,0 +1,30 @@
+<div class="container mt-5">
+  <h2 class="mb-5 text-center">Login</h2>
+  <% if(typeof errors != "undefined") {%>
+  <div class="alert alert-danger d-flex align-items-center" role="alert">
+    <ul>
+      <% errors.forEach(er => {%>
+      <li><%= er.msg %></li>
+      <%}) %>
+    </ul>
+  </div>
+  <% }; %>
+  <form action="/validasi-user" method="post">
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <label class="form-label" for="username">Username</label>
+      <input type="text" id="username" name="username" class="form-control" />
+      <div id="error-username" style="color: red"></div>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+      <label class="form-label" for="password">Password</label>
+      <input type="password" id="password" name="password" class="form-control mb-2" />
+      <div id="error-password" style="color: red"></div>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" id="btn-sign" class="btn btn-primary btn-block mb-4 disabled">Sign in</button>
+  </form>
+</div>

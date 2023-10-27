@@ -718,7 +718,6 @@ const finalClosed = mongoose.model("final_closed", {
   },
 });
 
-
 const spgrlod = mongoose.model("spgrlod", {
   no_polis: {
     type: String,
@@ -790,7 +789,6 @@ const spgrlod = mongoose.model("spgrlod", {
     required: false,
   },
 });
-
 
 const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
   no_polis: {
@@ -887,7 +885,6 @@ const doneSpgrPayment = mongoose.model("doneSpgrPayment", {
     required: false,
   },
 });
-
 
 const xol = mongoose.model("xol", {
   no_polis: {
@@ -1112,5 +1109,16 @@ const deleteBucket = mongoose.model("delete_bucket", {
   },
 });
 
+const user = mongoose.model("user", {
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
 
-export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed, hasilInvestigasi, xol, fob, coins, deleteBucket };
+export { pengajuanKlaim, claimClosed, investigasi, pengajuanSPK, doneSuratTolak, pengajuanSPKPartial, pengajuanSPKCtl, spgrlod, pengajuanSPKAtl, doneSpgrPayment, finalClosed, hasilInvestigasi, xol, fob, coins, deleteBucket, user };
