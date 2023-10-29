@@ -156,27 +156,6 @@ window.addEventListener("click", function (e) {
 
 // CABANG / BRANCH
 
-// PENGATURAN AGING
-const socket = io();
-let agingArray = {};
-let i = 0;
-
-socket.on("message", (data, count) => {
-  // const aging = data.length;
-  // for (const doc of aging) {
-  for (const doc of data) {
-    const id = doc._id;
-    const aging = document.getElementById(`aging${id}`);
-    console.log(`data server : ${i} `, doc.aging, "jumlah :", count, "aging : ", aging.textContent);
-    aging.textContent = doc.aging;
-    i++;
-  }
-
-  i = 0;
-
-  // }
-});
-
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
