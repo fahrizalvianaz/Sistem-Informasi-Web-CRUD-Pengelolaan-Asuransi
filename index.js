@@ -54,7 +54,7 @@ app.use(flash());
 
 // GET
 
-app.get("/auth/login", async (req, res) => {
+app.get("/", async (req, res) => {
   res.render("auth/index", {
     layout: "layouts/second_layout",
     msg: req.flash("msg"),
@@ -62,7 +62,7 @@ app.get("/auth/login", async (req, res) => {
 });
 
 app.get("/logout", async (req, res) => {
-  res.redirect('/auth/login');
+  res.redirect('/');
 });
 
 // Halaman Klaim

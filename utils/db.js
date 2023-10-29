@@ -1,6 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
-mongoose.connect("mongodb://127.0.0.1:27017/rag", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+
+mongoose.set("strict", false);
+
+mongoose
+  .connect("mongodb+srv://fahrizalshofyanaziz:5bVGkFYXhgViUIO3@cluster0.ezutszz.mongodb.net/rag", { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("Koneksi MongoDB sukses");
+  })
+  .catch((err) => {
+    console.error("Koneksi MongoDB gagal:", err);
+  });
