@@ -2332,34 +2332,7 @@ app.delete("/delete-permanent", (req, res) => {
     });
 });
 
-// Jadwalkan pembaruan data setiap hari
-io.on("connection", async (socket) => {
-  const data = await investigasi.find();
-  let i = 0;
-  cron.schedule("0 0 * * *", async () => {
-    for (const document of data) {
-      const tglsebelumValue = new Date(document.tanggal_kirim_surat);
-      const tglsekarangValue = new Date();
 
-      const selisihMilidetik = tglsekarangValue - tglsebelumValue;
-      const selisihDetik = selisihMilidetik / 1000;
-      const selisihMenit = selisihDetik / 60;
-      const selisihJam = selisihMenit / 60;
-      const selisihHari = selisihJam / 24;
-      document.aging = parseInt(selisihHari);
-      // document.aging = document.aging +  1;
-      await document.save();
-      console.log("aging : ", document.aging);
-    }
-    const count = await investigasi.countDocuments();
-    console.log(`data dari client${i}`, "jumlah :", count);
-    socket.broadcast.emit("message", data, count);
-    i++;
-  });
-  socket.on("error", (err) => {
-    console.error("Kesalahan koneksi:", err.message);
-  });
-});
 
 server.listen(port, () => {
   console.log("Server running on port 3000");
