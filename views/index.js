@@ -35,8 +35,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const app = express();
-const port = 3000;
-const hostname = '0.0.0.0';
+const port = process.env.PORT || 3000;
+
 const server = http.createServer(app);
 const io = new Server(server);
 const __filename = fileURLToPath(import.meta.url);
