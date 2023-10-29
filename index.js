@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
-import "../utils/db.js";
+import "./utils/db.js";
 import {
   pengajuanKlaim,
   claimClosed,
@@ -20,7 +20,7 @@ import {
   coins,
   deleteBucket,
   user,
-} from "../model/onprosses_pengajuan_klaim.js";
+} from "./model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
 import session from "express-session";
@@ -29,7 +29,6 @@ import flash from "connect-flash";
 import cron from "node-cron";
 import http from "http";
 import bcrypt from "bcrypt";
-import { Server } from "socket.io";
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -38,7 +37,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
-const io = new Server(server);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
