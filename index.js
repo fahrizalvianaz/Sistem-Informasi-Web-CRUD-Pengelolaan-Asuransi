@@ -30,12 +30,20 @@ import cron from "node-cron";
 import http from "http";
 import bcrypt from "bcrypt";
 import { Server } from "socket.io";
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 const app = express();
 const port = 3000;
+const hostname = '0.0.0.0';
 const server = http.createServer(app);
 const io = new Server(server);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
+console.log(__dirname)
+app.set('views', path.join(__dirname, 'views/auth'));
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts);
 app.use(express.static("public"));
