@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
-import "./utils/db.js";
+import "../utils/db.js";
 import {
   pengajuanKlaim,
   claimClosed,
@@ -20,7 +20,7 @@ import {
   coins,
   deleteBucket,
   user,
-} from "./model/onprosses_pengajuan_klaim.js";
+} from "../model/onprosses_pengajuan_klaim.js";
 import { body, validationResult } from "express-validator";
 import methodOverride from "method-override";
 import session from "express-session";
@@ -43,7 +43,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 console.log(__dirname)
-app.set('views', path.join(__dirname, 'views/auth'));
+app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts);
 app.use(express.static("public"));
