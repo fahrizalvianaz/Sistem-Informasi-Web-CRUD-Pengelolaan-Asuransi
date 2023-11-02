@@ -713,6 +713,27 @@ app.put("/update-status-claim-hasil-investigasi", async (req, res) => {
     });
 });
 
+
+// Update hasil investigasi
+app.put("/update-hasil-investigasi-selesai", async (req, res) => {
+  await hasilInvestigasi
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          hasil_investigasi: req.body.hasil_investigasi,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data berhasil diubah !");
+      res.redirect("/hasil-investigasi");
+    });
+});
+
+
 // Update pdv hasil investigasi
 app.put("/update-pdv-hasil-investigasi", async (req, res) => {
   await hasilInvestigasi
@@ -1892,6 +1913,16 @@ app.post("/tambah-investigasi", async (req, res) => {
 // Investigasi
 app.post("/tambah-hasil-investigasi", async (req, res) => {
   // res.send(req.body);
+
+  let tglKirimSurat = new Date(req.body.tanggal_kirim_surat);
+  const tgllhsValue = new Date(req.body.tanggal_terima_lhs);
+  let selisihMilidetik = tgllhsValue - tglKirimSurat;
+  let selisihDetik = selisihMilidetik / 1000;
+  let selisihMenit = selisihDetik / 60;
+  let selisihJam = selisihMenit / 60;
+  let selisihHari = selisihJam / 24;
+  req.body.aging_investigasi = parseInt(selisihHari);
+ 
   hasilInvestigasi
     .insertMany(req.body)
     .then(function () {

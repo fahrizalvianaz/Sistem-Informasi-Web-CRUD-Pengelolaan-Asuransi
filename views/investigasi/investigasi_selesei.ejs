@@ -55,7 +55,41 @@
         '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
         <td><%= formattedDate1 %></td>
         <td><%=element.aging_investigasi%></td>
-        <td><%=element.hasil_investigasi%></td>
+        <td>
+          <a href="#hasilInvestigasiModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
+          </a>
+            <%=element.hasil_investigasi%>
+          <!-- Modal -->
+          <div class="modal fade" id="hasilInvestigasiModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-hasil-investigasi-selesai?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
+                    <label for="sob" class="col-form-label">Hasil Investigasi</label>
+                    <div class="input-group mb-3">
+                      <select class="form-select" name="hasil_investigasi" id="hasil_investigasi">
+                        <option value="Claimable" <% if(element.hasil_investigasi == "Claimable") {%> selected <%}%> >Claimable</option>
+                        <option value="Not Claimable" <% if(element.hasil_investigasi == "Not Claimable") {%> selected <%}%> >Not Claimable</option>
+                      </select>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </td>
         <td>
           <a href="#statusModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
