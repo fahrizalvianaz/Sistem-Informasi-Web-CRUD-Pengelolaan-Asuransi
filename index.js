@@ -93,19 +93,6 @@ app.get("/onprosses-claimclosed", async (req, res) => {
     msg: req.flash("msg"),
   });
 });
-app.get("/final-closed", async (req, res) => {
-  const dueDateClosed = await finalClosed.distinct("ddc");
-  // res.send(dueDateClosed);
-  const data = await finalClosed.find();
-  const count = await finalClosed.countDocuments();
-  res.render("claim_closed/final_closed", {
-    layout: "layouts/main_layout",
-    data,
-    count,
-    dueDateClosed,
-    msg: req.flash("msg"),
-  });
-});
 
 app.get("/xol", async (req, res) => {
   // res.send(dueDateClosed);
@@ -217,11 +204,14 @@ app.get("/klaim/spk-partial", async (req, res) => {
 
 // Halaman Pengajuan SPK CTL
 app.get("/klaim/spk-ctl", async (req, res) => {
+  const tanggalSpkCtl = await pengajuanSPKCtl.distinct("tanggal_kirim_spk_ctl");
+  // res.send(tanggalSpkCtl);
   const spkCtl = await pengajuanSPKCtl.find();
   const count = await pengajuanSPKCtl.countDocuments();
   res.render("spk/spk_ctl/spk_ctl", {
     layout: "layouts/main_layout",
     spkCtl,
+    tanggalSpkCtl,
     count,
     msg: req.flash("msg"),
   });
@@ -229,12 +219,28 @@ app.get("/klaim/spk-ctl", async (req, res) => {
 
 // Halaman Pengajuan SPK ATL
 app.get("/klaim/spk-atl", async (req, res) => {
+  const tanggalSpkAtl = await pengajuanSPKAtl.distinct("tanggal_kirim_spk_atl");
   const spkAtl = await pengajuanSPKAtl.find();
   const count = await pengajuanSPKAtl.countDocuments();
   res.render("spk/spk_atl/spk_atl", {
     layout: "layouts/main_layout",
     spkAtl,
+    tanggalSpkAtl,
     count,
+    msg: req.flash("msg"),
+  });
+});
+
+app.get("/final-closed", async (req, res) => {
+  const dueDateClosed = await finalClosed.distinct("ddc");
+  // res.send(dueDateClosed);
+  const data = await finalClosed.find();
+  const count = await finalClosed.countDocuments();
+  res.render("claim_closed/final_closed", {
+    layout: "layouts/main_layout",
+    data,
+    count,
+    dueDateClosed,
     msg: req.flash("msg"),
   });
 });
@@ -421,7 +427,7 @@ app.put("/update-estimasi-spk-partial", async (req, res) => {
         },
       }
     )
-    .then( async (result) => {
+    .then(async (result) => {
       let amount = 0;
       let emstimasiValue = parseInt(req.body.estimasi_awal.replace(/[^0-9]/g, ""));
       let nilaiSPKValue = parseInt(req.body.nilai_spk.replace(/[^0-9]/g, ""));
@@ -453,6 +459,8 @@ app.put("/update-estimasi-spk-partial", async (req, res) => {
           if (emstimasiValue == 0) {
             presentase = 0;
           }
+
+          let presentaseValue = Math.round(presentase);
           await pengajuanSPKPartial
             .updateOne(
               {
@@ -460,7 +468,7 @@ app.put("/update-estimasi-spk-partial", async (req, res) => {
               },
               {
                 $set: {
-                  presentase: presentase.toString(),
+                  presentase: presentaseValue.toString(),
                 },
               }
             )
@@ -486,7 +494,7 @@ app.put("/update-nilai-spk-partial", async (req, res) => {
         },
       }
     )
-    .then( async (result) => {
+    .then(async (result) => {
       let amount = 0;
       let emstimasiValue = parseInt(req.body.estimasi_awal.replace(/[^0-9]/g, ""));
       let nilaiSPKValue = parseInt(req.body.nilai_spk.replace(/[^0-9]/g, ""));
@@ -518,7 +526,7 @@ app.put("/update-nilai-spk-partial", async (req, res) => {
           if (emstimasiValue == 0) {
             presentase = 0;
           }
-          let presentaseValue =  Math.round(presentase);
+          let presentaseValue = Math.round(presentase);
           await pengajuanSPKPartial
             .updateOne(
               {
@@ -555,6 +563,46 @@ app.put("/update-keterangan-spk-partial", async (req, res) => {
     .then((result) => {
       req.flash("msg", "Data keterangan berhasil diubah !");
       res.redirect("klaim/spk-partial");
+    });
+});
+
+// Update keterangan spk ctl
+app.put("/update-keterangan-spk-ctl", async (req, res) => {
+  // res.send(typeof req.body.nett_klaim);
+  await pengajuanSPKCtl
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan: req.body.keterangan,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data keterangan berhasil diubah !");
+      res.redirect("klaim/spk-ctl");
+    });
+});
+
+// Update keterangan spk atl
+app.put("/update-keterangan-spk-atl", async (req, res) => {
+  // res.send(typeof req.body.nett_klaim);
+  await pengajuanSPKAtl
+    .updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        $set: {
+          keterangan: req.body.keterangan,
+        },
+      }
+    )
+    .then((result) => {
+      req.flash("msg", "Data keterangan berhasil diubah !");
+      res.redirect("klaim/spk-atl");
     });
 });
 

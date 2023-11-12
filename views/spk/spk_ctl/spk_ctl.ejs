@@ -4,9 +4,13 @@
   <li class="divider">/</li>
   <li><a href="#" class="active">Onprosses</a></li>
 </ul>
-<% let i = 1; if (msg.length !== 0) { %>
+
+<% let getMonthSpkCtl = ""; if (msg.length !== 0) { %>
 <div class="alert alert-success" role="alert"><%= msg %></div>
-<% } %>
+<% } %> <% let j = 0; tanggalSpkCtl.forEach(element => { %> <% const monthSPKCtl = tanggalSpkCtl[j].getMonth() + 1; const ctlData = spkCtl.filter( element => { const bulan = element.tanggal_kirim_spk_ctl.getMonth() + 1; return `${bulan.toString().padStart(2, '0')}` === `${monthSPKCtl.toString().padStart(2, '0')}`}); %>
+<div class="text-start mt-5">
+  <h5>Bulan ke : <%= `${monthSPKCtl.toString().padStart(2, '0')}`; %><span class="badge bg-secondary ms-2"><%= ctlData.length %></span></h5>
+</div>
 <div class="info-data table-responsive">
   <table class="table table-bordered table-container">
     <thead class="table-primary">
@@ -17,19 +21,19 @@
         <th scope="col">SOB</th>
         <th scope="col">DOL</th>
         <th scope="col">TSI</th>
-        <th scope="col">Reserve amt</th>
         <th scope="col">Estimasi</th>
         <th scope="col">Nilai Penggantian</th>
         <th scope="col">Nilai Salvage</th>
         <th scope="col">Nett Klaim</th>
-        <th scope="col">Status</th>
+        <th scope="col">Tanggal SPK</th>
+        <th scope="col">Keterangan</th>
         <th scope="col">x</th>
       </tr>
     </thead>
     <tbody>
-      <% let totalReserveAmt = 0; let totalEstimasi= 0; let totalNettKlaim = 0; let totalNilaiPeng = 0; let totalNilaiSalvage = 0; spkCtl.forEach(element => { %>
+      <% let no = 1; let totalReserveAmt = 0; let totalEstimasi= 0; let totalNettKlaim = 0; let totalNilaiPeng = 0; let totalNilaiSalvage = 0; ctlData.forEach(element => { %>
       <tr>
-        <td><%=i%></td>
+        <td><%= no %></td>
         <td>
           <a href="#spgrModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <%=element.no_klaim%> </a>
           <!-- Modal -->
@@ -67,7 +71,7 @@
                     <input class="form-control" id="estimasi_awal" name="estimasi_awal" type="text" value="<%= element.estimasi_awal %>" readonly />
                     <label for="reserve_amt" class="col-form-label">Reserve Amt</label><br />
                     <input class="form-control" id="reserve_amt" name="reserve_amt" type="text" value="<%= element.reserve_amt %>" readonly />
-                    <label for="tanggal_kirim_spk" class="col-form-label">Tanggal Kirim SPK</label><br />
+                    <label for="tanggal_kirim_spk" class="col-form-label">Tanggal Pengajuan SPK</label><br />
                     <% const day1 = element.tanggal_kirim_spk.getDate(); const month1 = element.tanggal_kirim_spk.getMonth(); const year1 = element.tanggal_kirim_spk.getFullYear(); let formattedDate1 = `${day1.toString().padStart(2,
                     '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
                     <input class="form-control" type="text" value="<%= formattedDate1 %>" readonly />
@@ -75,7 +79,7 @@
                     <input class="form-control" type="text" name="tanggal_kirim_spk" id="tanggal_kirim_spk" value="<%= tanggalKirimSpk %>" readonly hidden />
                     <% const day2 = element.tanggal_kirim_spk_ctl.getDate(); const month2 = element.tanggal_kirim_spk_ctl.getMonth(); const year2 = element.tanggal_kirim_spk_ctl.getFullYear(); let formattedDate2 =
                     `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %>
-                    <label for="tanggal_kirim_spk_ctl" class="col-form-label">Tanggal Kirim SPK CTL</label><br />
+                    <label for="tanggal_kirim_spk_ctl" class="col-form-label">Tanggal Terbit SPK CTL</label><br />
                     <input class="form-control" type="text" value="<%= formattedDate2 %>" readonly />
                     <% formattedDate2 = `${year2}-${month2.toString().padStart(2, '0')}-${day2.toString().padStart(2, '0')}`; const tglCtl = new Date(formattedDate2)%>
                     <input class="form-control" type="date" value="<%= tglCtl %>" readonly hidden />
@@ -102,12 +106,11 @@
         </td>
         <td><%= element.plat_nomor %></td>
         <td><%= element.sob %></td>
-        <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+        <% const day = element.dol.getDate(); const month = element.dol.getMonth() + 1; const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
         <td><%= formattedDate %></td>
         <td><%= element.tsi %></td>
-        <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %> <% totalReserveAmt = totalReserveAmt + numericValue %>
-        <td><%= element.reserve_amt %></td>
-        <% const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} %>
+        <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %> <% totalReserveAmt = totalReserveAmt + numericValue %> <% const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <%
+        if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} %>
         <td id="estimasiAwal">
           <a href="#exampleModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i> </a> <%=
           element.estimasi_awal %>
@@ -195,11 +198,38 @@
         </td>
         <% if(isNaN(penggantianValue)){penggantianValue = 0}; if(isNaN(salvageValue)){salvageValue = 0}; let nettKlaim =penggantianValue - salvageValue; %>
         <td>Rp <%=nettKlaim.toLocaleString() %></td>
-        <%totalNettKlaim = totalNettKlaim + nettKlaim%>
+        <%totalNettKlaim = totalNettKlaim + nettKlaim%> <% const day5 = element.tanggal_kirim_spk_ctl.getDate(); const month5 = element.tanggal_kirim_spk_ctl.getMonth() + 1; const year5 = element.tanggal_kirim_spk_ctl.getFullYear(); const
+        formattedDate5 = `${day5.toString().padStart(2, '0')}-${month5.toString().padStart(2, '0')}-${year5}`; getMonthSpkCtl = `${month5.toString().padStart(2, '0')}`%>
+        <td><%= formattedDate5 %></td>
         <td>
-          <a href="#" data-bs-toggle="tooltip" data-bs-title="<%for( let i=0; i < element.status.length; i++){%> <%=i + 1%>. <%=element.status[i] %> <% if(i < element.status.length - 1) { %> => <%} };%> " data-bs-placement="right">
-            <%= element.status[element.status.length - 1] %>
+          <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
+            <i class="bi bi-pencil"></i>
           </a>
+          <%= element.keterangan %>
+          <!-- Modal -->
+          <div class="modal fade" id="ketModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="/update-keterangan-spk-ctl?_method=PUT" method="post">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="keterangan" style="height: 100px" required><%= element.keterangan %></textarea>
+                      <label for="floatingTextarea2">Tambah keterangan</label>
+                    </div>
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </td>
         <td class="text-center">
           <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
@@ -232,7 +262,7 @@
           </div>
         </td>
       </tr>
-      <% i++;}); %>
+      <% no++ }); %>
     </tbody>
     <tfoot>
       <td></td>
@@ -241,13 +271,15 @@
       <td></td>
       <td></td>
       <td></td>
-      <td>Rp <%= totalReserveAmt.toLocaleString() %></td>
       <td>Rp <%= totalEstimasi.toLocaleString() %></td>
       <td>Rp <%= totalNilaiPeng.toLocaleString() %></td>
       <td>Rp <%= totalNilaiSalvage.toLocaleString() %></td>
       <td>Rp <%= totalNettKlaim.toLocaleString() %></td>
       <td></td>
       <td></td>
+      <td></td>
     </tfoot>
   </table>
 </div>
+
+<% j++}); %>

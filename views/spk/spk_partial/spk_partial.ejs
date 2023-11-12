@@ -93,6 +93,7 @@
         </td>
         <% if(element.amount != null) { const amountValue = parseInt(element.amount.replace(/[^0-9]/g, "")); %> <% totalAmt = totalAmt + amountValue } %>
         <td><%= element.amount %></td>
+       
         <td><%= element.presentase %>%</td>
         <td>
           <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
@@ -167,7 +168,8 @@
       <td>Rp <%= totalEstimasi.toLocaleString() %></td>
       <td>Rp <%= totalNilaiSPK.toLocaleString() %></td>
       <td>Rp <%= totalAmt.toLocaleString() %></td>
-      <td></td>
+       <% let totalPresentase = 0 ; totalPresentase = (totalNilaiSPK / totalEstimasi) * 100;  %>
+      <td><%= Math.round(totalPresentase) %>%</td>
       <td></td>
       <td></td>
      
