@@ -29,9 +29,9 @@ import flash from "connect-flash";
 import cron from "node-cron";
 import http from "http";
 import bcrypt from "bcrypt";
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import * as path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -40,8 +40,8 @@ const server = http.createServer(app);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-console.log(__dirname)
-app.set('views', path.join(__dirname, 'views'));
+console.log(__dirname);
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(expressEjsLayouts);
 app.use(express.static("public"));
@@ -68,7 +68,7 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/logout", async (req, res) => {
-  res.redirect('/');
+  res.redirect("/");
 });
 
 // Halaman Klaim
@@ -82,6 +82,7 @@ app.get("/klaim", async (req, res) => {
     msg: req.flash("msg"),
   });
 });
+
 app.get("/onprosses-claimclosed", async (req, res) => {
   const claimclosed = await claimClosed.find();
   const count = await claimClosed.countDocuments();
@@ -713,7 +714,6 @@ app.put("/update-status-claim-hasil-investigasi", async (req, res) => {
     });
 });
 
-
 // Update hasil investigasi
 app.put("/update-hasil-investigasi-selesai", async (req, res) => {
   await hasilInvestigasi
@@ -732,7 +732,6 @@ app.put("/update-hasil-investigasi-selesai", async (req, res) => {
       res.redirect("/hasil-investigasi");
     });
 });
-
 
 // Update pdv hasil investigasi
 app.put("/update-pdv-hasil-investigasi", async (req, res) => {
@@ -1837,32 +1836,32 @@ app.post(
 
 // Validasi User
 app.post(
-  "/validasi-user",[
-  body("password").custom(async (value) => {
-    const userLogin = await user.find();
-    let passwordDB = "";
-    userLogin.forEach((e) => {
-      passwordDB = e.password;
-    });
-    const isPasswordValid = await bcrypt.compare(value, passwordDB);
-    if (!isPasswordValid) {
-      throw new Error("Invalid password");
-    }
-    return true;
-  }),
-  body("username").custom(async (value) => {
-    const userLogin = await user.find();
-    let usernameDB = "";
-    userLogin.forEach((e) => {
-      usernameDB = e.username;
-    });
-    if (value != usernameDB) {
-      throw new Error("Invalid username");
-    }
-    return true;
-  }),
-  
-],
+  "/validasi-user",
+  [
+    body("password").custom(async (value) => {
+      const userLogin = await user.find();
+      let passwordDB = "";
+      userLogin.forEach((e) => {
+        passwordDB = e.password;
+      });
+      const isPasswordValid = await bcrypt.compare(value, passwordDB);
+      if (!isPasswordValid) {
+        throw new Error("Invalid password");
+      }
+      return true;
+    }),
+    body("username").custom(async (value) => {
+      const userLogin = await user.find();
+      let usernameDB = "";
+      userLogin.forEach((e) => {
+        usernameDB = e.username;
+      });
+      if (value != usernameDB) {
+        throw new Error("Invalid username");
+      }
+      return true;
+    }),
+  ],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -1922,7 +1921,7 @@ app.post("/tambah-hasil-investigasi", async (req, res) => {
   let selisihJam = selisihMenit / 60;
   let selisihHari = selisihJam / 24;
   req.body.aging_investigasi = parseInt(selisihHari);
- 
+
   hasilInvestigasi
     .insertMany(req.body)
     .then(function () {
@@ -2368,8 +2367,6 @@ app.delete("/delete-permanent", (req, res) => {
       console.log(err);
     });
 });
-
-
 
 server.listen(port, () => {
   console.log("Server running on port 3000");
