@@ -421,14 +421,59 @@ app.put("/update-estimasi-spk-partial", async (req, res) => {
         },
       }
     )
-    .then((result) => {
-      req.flash("msg", "Data estimasi berhasil diubah !");
-      res.redirect("klaim/spk-partial");
+    .then( async (result) => {
+      let amount = 0;
+      let emstimasiValue = parseInt(req.body.estimasi_awal.replace(/[^0-9]/g, ""));
+      let nilaiSPKValue = parseInt(req.body.nilai_spk.replace(/[^0-9]/g, ""));
+
+      if (isNaN(emstimasiValue)) {
+        emstimasiValue = 0;
+      }
+      if (isNaN(nilaiSPKValue)) {
+        nilaiSPKValue = 0;
+      }
+      amount = emstimasiValue - nilaiSPKValue;
+
+      await pengajuanSPKPartial
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              amount: amount.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          let presentase = (nilaiSPKValue / emstimasiValue) * 100;
+          if (nilaiSPKValue == 0) {
+            presentase = 0;
+          }
+          if (emstimasiValue == 0) {
+            presentase = 0;
+          }
+          await pengajuanSPKPartial
+            .updateOne(
+              {
+                _id: req.body._id,
+              },
+              {
+                $set: {
+                  presentase: presentase.toString(),
+                },
+              }
+            )
+            .then((result) => {
+              req.flash("msg", "Data nilai SPK berhasil diubah !");
+              res.redirect("klaim/spk-partial");
+            });
+        });
     });
 });
 
 // Update nett klaim spk partial
-app.put("/update-nettklaim-spk-partial", async (req, res) => {
+app.put("/update-nilai-spk-partial", async (req, res) => {
   // res.send(typeof req.body.nett_klaim);
   await pengajuanSPKPartial
     .updateOne(
@@ -437,13 +482,59 @@ app.put("/update-nettklaim-spk-partial", async (req, res) => {
       },
       {
         $set: {
-          nett_klaim: req.body.nett_klaim,
+          nilai_spk: req.body.nilai_spk,
         },
       }
     )
-    .then((result) => {
-      req.flash("msg", "Data net klaim berhasil diubah !");
-      res.redirect("klaim/spk-partial");
+    .then( async (result) => {
+      let amount = 0;
+      let emstimasiValue = parseInt(req.body.estimasi_awal.replace(/[^0-9]/g, ""));
+      let nilaiSPKValue = parseInt(req.body.nilai_spk.replace(/[^0-9]/g, ""));
+
+      if (isNaN(emstimasiValue)) {
+        emstimasiValue = 0;
+      }
+      if (isNaN(nilaiSPKValue)) {
+        nilaiSPKValue = 0;
+      }
+      amount = emstimasiValue - nilaiSPKValue;
+
+      await pengajuanSPKPartial
+        .updateOne(
+          {
+            _id: req.body._id,
+          },
+          {
+            $set: {
+              amount: amount.toLocaleString("id-ID"),
+            },
+          }
+        )
+        .then(async (result) => {
+          let presentase = (nilaiSPKValue / emstimasiValue) * 100;
+          if (nilaiSPKValue == 0) {
+            presentase = 0;
+          }
+          if (emstimasiValue == 0) {
+            presentase = 0;
+          }
+          let presentaseValue =  Math.round(presentase);
+          await pengajuanSPKPartial
+            .updateOne(
+              {
+                _id: req.body._id,
+              },
+              {
+                $set: {
+                  presentase: presentaseValue.toString(),
+                },
+              }
+            )
+            .then((result) => {
+              req.flash("msg", "Data nilai SPK berhasil diubah !");
+              res.redirect("klaim/spk-partial");
+            });
+        });
     });
 });
 

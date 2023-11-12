@@ -548,7 +548,15 @@ const pengajuanSPKPartial = mongoose.model("pengajuanSPKPartial", {
     type: String,
     required: false,
   },
-  nett_klaim: {
+  nilai_spk: {
+    type: String,
+    required: false,
+  },
+  amount: {
+    type: String,
+    required: false,
+  },
+  presentase: {
     type: String,
     required: false,
   },

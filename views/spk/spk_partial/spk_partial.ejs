@@ -17,16 +17,16 @@
         <th scope="col">SOB</th>
         <th scope="col">DOL</th>
         <th scope="col">TSI</th>
-        <th scope="col">Reserve amt</th>
         <th scope="col">Estimasi</th>
-        <th scope="col">Nett Klaim</th>
+        <th scope="col">Nilai SPK</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Presentase</th>
         <th scope="col">Keterangan</th>
-        <th scope="col">Status</th>
         <th scope="col">x</th>
       </tr>
     </thead>
     <tbody>
-      <% let totalReserveAmt = 0; let totalEstimasi= 0; let totalNettKlaim = 0 %> <% spkPartial.forEach(element => { %>
+      <% let totalAmt = 0; let totalEstimasi= 0; let totalNilaiSPK = 0 %> <% spkPartial.forEach(element => { %>
       <tr>
         <td><%=i%></td>
         <td><%=element.no_klaim%></td>
@@ -35,9 +35,7 @@
         <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
         <td><%= formattedDate %></td>
         <td><%= element.tsi %></td>
-        <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %> <% totalReserveAmt = totalReserveAmt + numericValue %>
-        <td><%= element.reserve_amt %></td>
-        <% const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} %>
+        <% if(element.estimasi_awal != null){ const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} }%>
         <td id="estimasiAwal">
           <a href="#exampleModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i> </a> <%=
           element.estimasi_awal %>
@@ -54,6 +52,7 @@
                     <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Estimasi</label><br />
                     <input class="form-control estimasi_awal" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="nilai_spk" name="nilai_spk" value="<%= element.nilai_spk %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -65,22 +64,23 @@
           </div>
         </td>
         </td>
-        <% const nettKlaimValue = parseInt(element.nett_klaim.replace(/[^0-9]/g, "")); %> <% if(!isNaN(nettKlaimValue)){totalNettKlaim = totalNettKlaim + nettKlaimValue} %>
+        <% if(element.nilai_spk != null) { const nilaiSPKValue = parseInt(element.nilai_spk.replace(/[^0-9]/g, "")); %> <% if(!isNaN(nilaiSPKValue)){totalNilaiSPK = totalNilaiSPK + nilaiSPKValue} }%>
         <td><a href="#nettKlaimModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)"> <i class="bi bi-pencil"></i> </a> <%=
-          element.nett_klaim%>
+          element.nilai_spk%>
            <!-- Modal -->
           <div class="modal fade" id="nettKlaimModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-nettklaim-spk-partial?_method=PUT" method="post">
+                <form action="/update-nilai-spk-partial?_method=PUT" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Nett Klaim</label><br />
-                    <input class="form-control estimasi_awal" id="nett_klaim" name="nett_klaim" value="<%= element.nett_klaim%>" />
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Update Nilai SPK</label><br />
+                    <input class="form-control estimasi_awal" id="nilai_spk" name="nilai_spk" value="<%= element.nilai_spk%>" />
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="estimasi_awal" name="estimasi_awal" value="<%= element.estimasi_awal %>" hidden />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -91,6 +91,9 @@
             </div>
           </div>
         </td>
+        <% if(element.amount != null) { const amountValue = parseInt(element.amount.replace(/[^0-9]/g, "")); %> <% totalAmt = totalAmt + amountValue } %>
+        <td><%= element.amount %></td>
+        <td><%= element.presentase %>%</td>
         <td>
           <a href="#ketModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
@@ -120,11 +123,6 @@
               </div>
             </div>
           </div>
-        </td>
-        <td>
-          <a href="#" data-bs-toggle="tooltip" data-bs-title="<%for( let i=0; i < element.status.length; i++){%> <%=i + 1%>. <%=element.status[i] %> <% if(i < element.status.length - 1) { %> => <%} };%> " data-bs-placement="right">
-            <%= element.status[element.status.length - 1] %>
-          </a>
         </td>
         <td class="text-center">
           <a href="#deleteModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-danger" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
@@ -166,9 +164,9 @@
       <td></td>
       <td></td>
       <td></td>
-      <td>Rp <%= totalReserveAmt.toLocaleString() %></td>
       <td>Rp <%= totalEstimasi.toLocaleString() %></td>
-      <td>Rp <%= totalNettKlaim.toLocaleString() %></td>
+      <td>Rp <%= totalNilaiSPK.toLocaleString() %></td>
+      <td>Rp <%= totalAmt.toLocaleString() %></td>
       <td></td>
       <td></td>
       <td></td>
