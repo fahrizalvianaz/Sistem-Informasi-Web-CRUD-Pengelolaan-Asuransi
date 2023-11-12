@@ -36,7 +36,7 @@
         <td><%=element.no_klaim%></td>
         <td><%= element.plat_nomor %></td>
         <td><%= element.sob %></td>
-        <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+        <% const day = element.dol.getDate(); const month = element.dol.getMonth() + 1; const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
         <td><%= formattedDate %></td>
         <td><%= element.tsi %></td>
         <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %>
@@ -45,7 +45,7 @@
         <td><%=element.estimasi_awal %></td>
         <td><%=element.nilai_penggantian%></td>
 
-        <% const day1 = element.tanggal_kirim_spgr.getDate(); const month1 = element.tanggal_kirim_spgr.getMonth(); const year1 = element.tanggal_kirim_spgr.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2,
+        <% const day1 = element.tanggal_kirim_spgr.getDate(); const month1 = element.tanggal_kirim_spgr.getMonth() + 1; const year1 = element.tanggal_kirim_spgr.getFullYear(); const formattedDate1 = `${day1.toString().padStart(2,
         '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
         <td><%= formattedDate1 %></td>
         <td>
@@ -53,7 +53,7 @@
             <i class="bi bi-pencil"></i>
           </a>
 
-          <% if (element.tanggal_feedback != null) { const day2 = element.tanggal_feedback.getDate(); const month2 = element.tanggal_feedback.getMonth(); const year2 = element.tanggal_feedback.getFullYear();formattedDate2 =
+          <% if (element.tanggal_feedback != null) { const day2 = element.tanggal_feedback.getDate(); const month2 = element.tanggal_feedback.getMonth() + 1; const year2 = element.tanggal_feedback.getFullYear();formattedDate2 =
           `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { formattedDate2 = "-" } %> <%= formattedDate2%>
           <!-- Modal -->
           <div class="modal fade" id="feedModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -84,7 +84,7 @@
           <a href="#payModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% if (element.tanggal_payment != null) { const day3 = element.tanggal_payment.getDate(); const month3 = element.tanggal_payment.getMonth(); const year3 = element.tanggal_payment.getFullYear();formattedDate3 =
+          <% if (element.tanggal_payment != null) { const day3 = element.tanggal_payment.getDate(); const month3 = element.tanggal_payment.getMonth() + 1; const year3 = element.tanggal_payment.getFullYear();formattedDate3 =
           `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else { formattedDate3 = "-" } %> <%= formattedDate3 %>
           <!-- Modal -->
           <div class="modal fade" id="payModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

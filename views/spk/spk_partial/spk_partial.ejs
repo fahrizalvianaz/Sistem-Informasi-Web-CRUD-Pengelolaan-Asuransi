@@ -32,7 +32,7 @@
         <td><%=element.no_klaim%></td>
         <td><%= element.plat_nomor %></td>
         <td><%= element.sob %></td>
-        <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+        <% const day = element.dol.getDate(); const month = element.dol.getMonth() + 1; const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
         <td><%= formattedDate %></td>
         <td><%= element.tsi %></td>
         <% if(element.estimasi_awal != null){ const estimasiValue = parseInt(element.estimasi_awal.replace(/[^0-9]/g, "")); %> <% if(!isNaN(estimasiValue)) {totalEstimasi = totalEstimasi + estimasiValue} }%>

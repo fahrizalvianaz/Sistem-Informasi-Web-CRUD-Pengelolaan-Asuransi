@@ -155,7 +155,7 @@
           <a href="#invoiceModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% if (element.tanggal_terima_invoice != null) { const day2 = element.tanggal_terima_invoice.getDate(); const month2 = element.tanggal_terima_invoice.getMonth(); const year2 = element.tanggal_terima_invoice.getFullYear(); formattedDate2 =
+          <% if (element.tanggal_terima_invoice != null) { const day2 = element.tanggal_terima_invoice.getDate(); const month2 = element.tanggal_terima_invoice.getMonth() + 1; const year2 = element.tanggal_terima_invoice.getFullYear(); formattedDate2 =
           `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { formattedDate2 = "-" } %> <%= formattedDate2 %>
           <!-- Modal -->
           <div class="modal fade" id="invoiceModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -253,7 +253,7 @@
             <a href="#tglPaymentModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
               <i class="bi bi-pencil"></i>
             </a>
-            <% if (element.tanggal_payment != null) { const day3 = element.tanggal_payment.getDate(); const month3 = element.tanggal_payment.getMonth(); const year3 = element.tanggal_payment.getFullYear(); formattedDate3 =
+            <% if (element.tanggal_payment != null) { const day3 = element.tanggal_payment.getDate(); const month3 = element.tanggal_payment.getMonth() + 1; const year3 = element.tanggal_payment.getFullYear(); formattedDate3 =
             `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else { formattedDate3 = "-" } %> <%= formattedDate3 %>
             <!-- Modal -->
             <div class="modal fade" id="tglPaymentModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

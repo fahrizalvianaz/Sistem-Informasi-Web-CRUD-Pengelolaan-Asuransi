@@ -134,7 +134,7 @@
           <a href="#fu1Modal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% if (element.follow_up_1 != null) { const day1 = element.follow_up_1.getDate(); const month1 = element.follow_up_1.getMonth(); const year1 = element.follow_up_1.getFullYear(); formattedDate1 =
+          <% if (element.follow_up_1 != null) { const day1 = element.follow_up_1.getDate(); const month1 = element.follow_up_1.getMonth() + 1; const year1 = element.follow_up_1.getFullYear(); formattedDate1 =
           `${day1.toString().padStart(2, '0')}-${month1.toString().padStart(2, '0')}-${year1}`; } else { formattedDate1 = "-" } %> <%= formattedDate1 %>
           <!-- Modal -->
           <div class="modal fade" id="fu1Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -165,7 +165,7 @@
           <a href="#fu2Modal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% if (element.follow_up_2 != null) { const day2 = element.follow_up_2.getDate(); const month2 = element.follow_up_2.getMonth(); const year2 = element.follow_up_2.getFullYear(); formattedDate2 =
+          <% if (element.follow_up_2 != null) { const day2 = element.follow_up_2.getDate(); const month2 = element.follow_up_2.getMonth() + 1; const year2 = element.follow_up_2.getFullYear(); formattedDate2 =
           `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { const formattedDate2 = "-" } %> <%= formattedDate2 %>
           <!-- Modal -->
           <div class="modal fade" id="fu2Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -196,7 +196,7 @@
           <a href="#fu3Modal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% if (element.follow_up_3 != null) { const day3 = element.follow_up_3.getDate(); const month3 = element.follow_up_3.getMonth(); const year3 = element.follow_up_3.getFullYear();formattedDate3 =
+          <% if (element.follow_up_3 != null) { const day3 = element.follow_up_3.getDate(); const month3 = element.follow_up_3.getMonth() + 1; const year3 = element.follow_up_3.getFullYear();formattedDate3 =
           `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else { const formattedDate3 = "-" } %> <%= formattedDate3 %>
           <!-- Modal -->
           <div class="modal fade" id="fu3Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -227,7 +227,7 @@
           <a href="#fu4Modal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
             <i class="bi bi-pencil"></i>
           </a>
-          <% if (element.follow_up_4 != null) { const day4 = element.follow_up_4.getDate(); const month4 = element.follow_up_4.getMonth(); const year4 = element.follow_up_4.getFullYear(); formattedDate4 =
+          <% if (element.follow_up_4 != null) { const day4 = element.follow_up_4.getDate(); const month4 = element.follow_up_4.getMonth() + 1; const year4 = element.follow_up_4.getFullYear(); formattedDate4 =
           `${day4.toString().padStart(2, '0')}-${month4.toString().padStart(2, '0')}-${year4}`; } else { const formattedDate4 = "-" } %> <%= formattedDate4 %>
           <!-- Modal -->
           <div class="modal fade" id="fu4Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

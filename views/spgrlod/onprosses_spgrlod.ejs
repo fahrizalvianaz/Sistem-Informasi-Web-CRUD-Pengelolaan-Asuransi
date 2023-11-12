@@ -27,8 +27,8 @@
     </thead>
     <tbody>
       <% data.forEach(element => { %>
-      <% const day = element.dol.getDate(); const month = element.dol.getMonth(); const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
-      <% const day1 = element.tanggal_kirim_spk.getDate(); const month1 = element.tanggal_kirim_spk.getMonth(); const year1 = element.tanggal_kirim_spk.getFullYear(); let formattedDate1 = `${day1.toString().padStart(2, '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
+      <% const day = element.dol.getDate(); const month = element.dol.getMonth() + 1; const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
+      <% const day1 = element.tanggal_kirim_spk.getDate(); const month1 = element.tanggal_kirim_spk.getMonth() + 1; const year1 = element.tanggal_kirim_spk.getFullYear(); let formattedDate1 = `${day1.toString().padStart(2, '0')}-${month1.toString().padStart(2, '0')}-${year1}`; %>
       <tr>
         <td><%=i%></td>
         <td> <a href="#spgrModal<%=element._id%>" data-bs-toggle="modal" id="edit" class="icon-link icon-link-hover link-primary" style="--bs-icon-link-transform: translate3d(0, -0.125rem, 0)">
@@ -76,7 +76,7 @@
                     <% const tanggalKirimSpk = new Date(formattedDate1) %>
                     <input class="form-control"  type="text" name="tanggal_kirim_spk" id="tanggal_kirim_spk" value="<%= tanggalKirimSpk %>" readonly hidden>
                     <% if( element.status[element.status.length - 1] === "Pengajuan SPK CTL") {%>
-                        <% const day2 = element.tanggal_kirim_spk_ctl.getDate(); const month2 = element.tanggal_kirim_spk_ctl.getMonth(); const year2 = element.tanggal_kirim_spk_ctl.getFullYear(); let formattedDate2 = `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %>
+                        <% const day2 = element.tanggal_kirim_spk_ctl.getDate(); const month2 = element.tanggal_kirim_spk_ctl.getMonth() + 1; const year2 = element.tanggal_kirim_spk_ctl.getFullYear(); let formattedDate2 = `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; %>
                         <label for="tanggal_kirim_spk_ctl" class="col-form-label">Tanggal Kirim SPK CTL</label><br />
                         <input class="form-control"   type="text" value="<%= formattedDate2 %>" readonly/>
                         <% formattedDate2 = `${year2}-${month2.toString().padStart(2, '0')}-${day2.toString().padStart(2, '0')}`; const tglCtl = new Date(formattedDate2)%>
@@ -86,7 +86,7 @@
                         <label for="nett_klaim" class="col-form-label">Nett Klaim</label><br />
                         <input class="form-control" id="nett_klaim" name="nett_klaim"  type="text" value="Rp <%= element.nett_klaim %>" readonly/>
                    <% } else { %>
-                        <% const day3 = element.tanggal_kirim_spk_atl.getDate(); const month3 = element.tanggal_kirim_spk_atl.getMonth(); const year3 = element.tanggal_kirim_spk_atl.getFullYear(); let formattedDate3 = `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; %>
+                        <% const day3 = element.tanggal_kirim_spk_atl.getDate(); const month3 = element.tanggal_kirim_spk_atl.getMonth() + 1; const year3 = element.tanggal_kirim_spk_atl.getFullYear(); let formattedDate3 = `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; %>
                         <label for="tanggal_kirim_spk_atl" class="col-form-label">Tanggal Kirim SPK ATL</label><br />
                         <input class="form-control"  type="text" value="<%= formattedDate3 %>" readonly/>
                         <% formattedDate3 = `${year3}-${month3.toString().padStart(2, '0')}-${day3.toString().padStart(2, '0')}`; const tglAtl = new Date(formattedDate3)%>
