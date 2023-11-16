@@ -160,7 +160,23 @@ app.get("/onprosses-investigasi", async (req, res) => {
 
 app.get("/hasil-investigasi", async (req, res) => {
   const investigatorNames = await hasilInvestigasi.distinct("investigator");
+
   const data = await hasilInvestigasi.find();
+  for (const document of data) {
+    if (document.tanggal_terima_invoice != null) {
+      const tglsebelumValue = new Date(document.tanggal_terima_invoice);
+      const tglsekarangValue = new Date();
+
+      const selisihMilidetik = tglsekarangValue - tglsebelumValue;
+      const selisihDetik = selisihMilidetik / 1000;
+      const selisihMenit = selisihDetik / 60;
+      const selisihJam = selisihMenit / 60;
+      const selisihHari = selisihJam / 24;
+      document.aging_payment = parseInt(selisihHari);
+      // document.aging = document.aging +  1;
+      await document.save();
+    }
+  }
   const count = await hasilInvestigasi.countDocuments();
   res.render("investigasi/investigasi_selesei", {
     layout: "layouts/main_layout",
@@ -247,13 +263,16 @@ app.get("/final-closed", async (req, res) => {
 
 // Halaman Pengajuan Done Surat Tolak
 app.get("/done-surat-tolak", async (req, res) => {
+  const status = await doneSuratTolak.distinct("status_done_surat_tolak");
   const data = await doneSuratTolak.find();
   const count = await doneSuratTolak.countDocuments();
+
   res.render("claim_closed/done_surat_tolak", {
     layout: "layouts/main_layout",
     data,
     count,
     msg: req.flash("msg"),
+    status,
   });
 });
 
@@ -1539,7 +1558,7 @@ app.put("/update-estimasi-spk-ctl", async (req, res) => {
         },
       }
     )
-    .then(function () {
+    .then(async () => {
       pengajuanSPKCtl
         .updateOne(
           {
@@ -1573,7 +1592,7 @@ app.put("/update-penggantian-spk-ctl", async (req, res) => {
         },
       }
     )
-    .then(function () {
+    .then(async () => {
       pengajuanSPKCtl
         .updateOne(
           {
@@ -1608,7 +1627,7 @@ app.put("/update-salvage-spk-ctl", async (req, res) => {
         },
       }
     )
-    .then(function () {
+    .then(async () => {
       pengajuanSPKCtl
         .updateOne(
           {
@@ -1641,7 +1660,7 @@ app.put("/update-estimasi-spk-atl", async (req, res) => {
         },
       }
     )
-    .then(function () {
+    .then(async () => {
       pengajuanSPKAtl
         .updateOne(
           {
@@ -1673,7 +1692,7 @@ app.put("/update-penggantian-spk-atl", async (req, res) => {
         },
       }
     )
-    .then(function () {
+    .then(async () => {
       pengajuanSPKAtl
         .updateOne(
           {
@@ -1706,7 +1725,7 @@ app.put("/update-keterangan-spgrlod", async (req, res) => {
           },
         }
       )
-      .then(function () {
+      .then(async () => {
         pengajuanSPKCtl
           .updateOne(
             {
@@ -1735,7 +1754,7 @@ app.put("/update-keterangan-spgrlod", async (req, res) => {
           },
         }
       )
-      .then(function () {
+      .then(async () => {
         pengajuanSPKAtl
           .updateOne(
             {
@@ -1962,7 +1981,7 @@ app.post(
     } else {
       pengajuanKlaim
         .insertMany(req.body)
-        .then(function () {
+        .then(async () => {
           req.flash("msg", "Data berhasil ditambahkan ke pengajuan klaim !");
           res.redirect("/klaim");
         })
@@ -2021,7 +2040,7 @@ app.post("/tambah-claim-closed", async (req, res) => {
   // res.send(req.body);
   claimClosed
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke claim closed !");
         res.redirect("/onprosses-claimclosed");
@@ -2037,7 +2056,7 @@ app.post("/tambah-investigasi", async (req, res) => {
   // res.send(req.body);
   investigasi
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke investigasi !");
         res.redirect("/onprosses-investigasi");
@@ -2051,6 +2070,8 @@ app.post("/tambah-investigasi", async (req, res) => {
 // Investigasi
 app.post("/tambah-hasil-investigasi", async (req, res) => {
   // res.send(req.body);
+  const dataSpk = await pengajuanSPK.findOneAndRemove({ no_klaim: req.body.no_klaim });
+  const dataClaimRejection = await claimClosed.findOneAndRemove({ no_klaim: req.body.no_klaim });
 
   let tglKirimSurat = new Date(req.body.tanggal_kirim_surat);
   const tgllhsValue = new Date(req.body.tanggal_terima_lhs);
@@ -2061,13 +2082,24 @@ app.post("/tambah-hasil-investigasi", async (req, res) => {
   let selisihHari = selisihJam / 24;
   req.body.aging_investigasi = parseInt(selisihHari);
 
-  hasilInvestigasi
+  await hasilInvestigasi
     .insertMany(req.body)
-    .then(function () {
-      investigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-        req.flash("msg", "Data berhasil ditambahkan ke hasil investigasi !");
-        res.redirect("/hasil-investigasi");
-      });
+    .then(async () => {
+      if (req.body.hasil_investigasi === "Claimable") {
+        await pengajuanSPK.insertMany(req.body).then(async () => {
+          investigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil ditambahkan ke hasil investigasi !");
+            res.redirect("/hasil-investigasi");
+          });
+        });
+      } else {
+        await claimClosed.insertMany(req.body).then(async () => {
+          investigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
+            req.flash("msg", "Data berhasil ditambahkan ke hasil investigasi !");
+            res.redirect("/hasil-investigasi");
+          });
+        });
+      }
     })
     .catch(function (err) {
       console.log(err);
@@ -2078,7 +2110,7 @@ app.post("/tambah-spk", async (req, res) => {
   // res.send(req.body);
   pengajuanSPK
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
         res.redirect("/klaim/pengajuan-spk");
@@ -2093,7 +2125,7 @@ app.post("/tambah-xol", async (req, res) => {
   // res.send(req.body);
   xol
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       req.flash("msg", "Data berhasil ditambahkan ke xol !");
       res.redirect("/xol");
     })
@@ -2106,7 +2138,7 @@ app.post("/tambah-fob", async (req, res) => {
   // res.send(req.body);
   fob
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       req.flash("msg", "Data berhasil ditambahkan ke fob !");
       res.redirect("/fob");
     })
@@ -2119,7 +2151,7 @@ app.post("/tambah-coins", async (req, res) => {
   // res.send(req.body);
   coins
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       req.flash("msg", "Data berhasil ditambahkan ke coins !");
       res.redirect("/coins");
     })
@@ -2132,7 +2164,7 @@ app.post("/tambah-spk-partial", async (req, res) => {
   // res.send(req.body);
   pengajuanSPKPartial
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanSPK.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk partial !");
         res.redirect("/klaim/spk-partial");
@@ -2147,7 +2179,7 @@ app.post("/tambah-spk-ctl", async (req, res) => {
   // res.send(req.body);
   pengajuanSPKCtl
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       spgrlod.insertMany(req.body).then(() => {
         pengajuanSPK.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk ctl !");
@@ -2164,7 +2196,7 @@ app.post("/tambah-spk-atl", async (req, res) => {
   // res.send(req.body);
   pengajuanSPKAtl
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       spgrlod.insertMany(req.body).then(() => {
         pengajuanSPK.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk atl !");
@@ -2179,11 +2211,15 @@ app.post("/tambah-spk-atl", async (req, res) => {
 
 app.post("/done-surat-tolak", async (req, res) => {
   // res.send(req.body);
+  var tanggalAwal = new Date(req.body.tanggal_terima_surat_tolak);
+  var tanggal30HariKedepan = new Date(req.body.tanggal_terima_surat_tolak);
+  tanggal30HariKedepan.setDate(tanggalAwal.getDate() + 30);
+  req.body.ddc = new Date(tanggal30HariKedepan);
   doneSuratTolak
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-        req.flash("msg", "Data berhasil ditambahkan ke pengajuan spk !");
+        req.flash("msg", "Data berhasil ditambahkan ke done surat tolak !");
         res.redirect("/done-surat-tolak");
       });
     })
@@ -2196,7 +2232,7 @@ app.post("/final-closed", async (req, res) => {
   // res.send(req.body);
   finalClosed
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke final closed !");
         res.redirect("/final-closed");
@@ -2211,7 +2247,7 @@ app.post("/claim-rejection/done-surat-tolak/spk", async (req, res) => {
   // res.send(req.body);
   pengajuanSPK
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan SPK !");
         res.redirect("/klaim/pengajuan-spk");
@@ -2226,7 +2262,7 @@ app.post("/tambah-done-spgrlod", async (req, res) => {
   // res.send(req.body);
   doneSpgrPayment
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil ditambahkan ke pengajuan done SPGR !");
         res.redirect("/spgrlod/done");
@@ -2242,7 +2278,7 @@ app.post("/batal-ctl", async (req, res) => {
   // res.send(req.body);
   pengajuanSPK
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
@@ -2261,7 +2297,7 @@ app.post("/batal-ctl", async (req, res) => {
 app.delete("/delete-klaim", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         xol.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           fob.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
@@ -2281,7 +2317,7 @@ app.delete("/delete-klaim", (req, res) => {
 app.delete("/delete-spk", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanSPK.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil didelete !");
         res.redirect("/klaim/pengajuan-spk");
@@ -2295,7 +2331,7 @@ app.delete("/delete-spk", (req, res) => {
 app.delete("/delete-spk-partial", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanSPKPartial.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil didelete !");
         res.redirect("/klaim/spk-partial");
@@ -2309,7 +2345,7 @@ app.delete("/delete-spk-partial", (req, res) => {
 app.delete("/delete-spk-atl", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanSPKAtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
@@ -2327,7 +2363,7 @@ app.delete("/delete-spk-atl", (req, res) => {
 app.delete("/delete-spk-ctl", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
@@ -2345,7 +2381,7 @@ app.delete("/delete-spk-ctl", (req, res) => {
 app.delete("/delete-claim-investigasi", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       investigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil didelete !");
         res.redirect("/onprosses-investigasi");
@@ -2359,10 +2395,19 @@ app.delete("/delete-claim-investigasi", (req, res) => {
 app.delete("/delete-claim-selesai-investigasi", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
-      hasilInvestigasi.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
-        req.flash("msg", "Data berhasil didelete !");
-        res.redirect("/hasil-investigasi");
+    .then(async () => {
+      await hasilInvestigasi.deleteOne({ no_klaim: req.body.no_klaim }).then( async () => {
+        if(req.body.hasil_investigasi === "Claimable") {
+          await pengajuanSPK.deleteOne({ no_klaim: req.body.no_klaim }).then( async () => {
+            req.flash("msg", "Data berhasil didelete !");
+            res.redirect("/hasil-investigasi");
+          })
+        } else {
+          await claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then( async () => {
+            req.flash("msg", "Data berhasil didelete !");
+            res.redirect("/hasil-investigasi");
+          })
+        }
       });
     })
     .catch(function (err) {
@@ -2373,7 +2418,7 @@ app.delete("/delete-claim-selesai-investigasi", (req, res) => {
 app.delete("/delete-claim-rejection", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       claimClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil didelete !");
         res.redirect("/onprosses-claimclosed");
@@ -2387,7 +2432,7 @@ app.delete("/delete-claim-rejection", (req, res) => {
 app.delete("/delete-done-surat-tolak", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       doneSuratTolak.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil didelete !");
         res.redirect("/done-surat-tolak");
@@ -2401,7 +2446,7 @@ app.delete("/delete-done-surat-tolak", (req, res) => {
 app.delete("/delete-final-closed", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       finalClosed.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         req.flash("msg", "Data berhasil didelete !");
         res.redirect("/final-closed");
@@ -2415,7 +2460,7 @@ app.delete("/delete-final-closed", (req, res) => {
 app.delete("/delete-spgrlod", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       spgrlod.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         pengajuanSPKAtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
@@ -2433,7 +2478,7 @@ app.delete("/delete-spgrlod", (req, res) => {
 app.delete("/delete-done-spgrlod", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       doneSpgrPayment.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         pengajuanSPKAtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           pengajuanSPKCtl.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
@@ -2451,7 +2496,7 @@ app.delete("/delete-done-spgrlod", (req, res) => {
 app.delete("/delete-xol", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       xol.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           req.flash("msg", "Data berhasil didelete !");
@@ -2467,7 +2512,7 @@ app.delete("/delete-xol", (req, res) => {
 app.delete("/delete-fob", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       fob.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           req.flash("msg", "Data berhasil didelete !");
@@ -2482,7 +2527,7 @@ app.delete("/delete-fob", (req, res) => {
 app.delete("/delete-coins", (req, res) => {
   deleteBucket
     .insertMany(req.body)
-    .then(function () {
+    .then(async () => {
       coins.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
         pengajuanKlaim.deleteOne({ no_klaim: req.body.no_klaim }).then((result) => {
           req.flash("msg", "Data berhasil didelete !");

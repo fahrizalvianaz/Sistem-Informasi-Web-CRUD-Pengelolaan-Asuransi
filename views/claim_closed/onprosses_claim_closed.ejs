@@ -51,21 +51,16 @@
                     <input class="form-control" id="reserve_amt" name="reserve_amt" hidden value="<%= element.reserve_amt %>" />
                     <input class="form-control" id="keterangan" name="keterangan" hidden value="<%= element.keterangan %>" />
                     <input class="form-control" id="keterangan_claimclosed" name="keterangan_claimclosed" hidden value="<%= element.keterangan_claimclosed %>" />
+                    <input class="form-control" id="status_done_surat_tolak" name="status_done_surat_tolak" hidden value="Tunggu 30 hari" />
                     <% for( let i = 0; i < element.status.length; i++ ) { %>
                       <input class="form-control" id="status" name="status" hidden value="<%= element.status[i] %>" />
                     <% } %>
                     <input class="form-control" id="status" name="status" hidden value="Done Surat Tolak" />
-                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Tgl Terbit Surat Tolak</label><br />
-                    <input class="form-control" id="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" placeholder="mm/dd/yyyy" type="date" required />
-                    <input class="form-control" id="ddc" name="ddc" placeholder="mm/dd/yyyy" value="" hidden />
-                    <label for="status" class="col-form-label">Status</label><br />
-                    <div class="input-group mb-3">
-                      <select class="form-select" name="status_done_surat_tolak" id="status_done_surat_tolak" required>
-                        <option value="Tunggu 30 hari">Tunggu 30 hari</option>
-                        <option value="Ajukan Banding">Ajukan Banding</option>
-                        <option value="Exgratia">Exgratia</option>
-                      </select>
-                    </div>
+                    <label for="tanggal_terima_surat_tolak" class="col-form-label">Tgl Kirim Surat Tolak</label><br />
+                    <input class="form-control" id="tanggal_terima_surat_tolak" class="tanggal_terima_surat_tolak" name="tanggal_terima_surat_tolak" placeholder="mm/dd/yyyy" type="date" required />
+                    <input class="form-control" id="ddc" name="ddc" class="ddc" placeholder="mm/dd/yyyy" value="" hidden/>
+                    <label for="no_surat_tolak" class="col-form-label">Nomor Surat Tolak</label><br />
+                    <input class="form-control" id="no_surat_tolak" name="no_surat_tolak" placeholder="Masukkan disini..." type="text" required />
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

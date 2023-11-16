@@ -1,5 +1,3 @@
-
-
 // SIDEBAR DROPDOWN
 const allDropdown = document.querySelectorAll("#sidebar .side-dropdown");
 const sidebar = document.getElementById("sidebar");
@@ -162,6 +160,9 @@ const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootst
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
 const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
 
+// const ttst = document.getElementById("tanggal_terima_surat_tolak");
+// const ddc = document.getElementById("ddc");
+
 const ttst = document.getElementById("tanggal_terima_surat_tolak");
 const ddc = document.getElementById("ddc");
 
@@ -212,9 +213,47 @@ estimasi.forEach((item) => {
 const iconStatus = document.getElementById("status-icon");
 const dropdownStatus = document.querySelector(".status-link");
 
+function showInput(inputId) {
+  // Semua elemen inputan tambahan disembunyikan terlebih dahulu
+
+  var allInputs = document.querySelectorAll(".additional-input");
+  for (var i = 0; i < allInputs.length; i++) {
+    allInputs[i].style.display = "none";
+    allInputs[i].querySelector(".input1").disabled = true;
+    console.log(allInputs.length);
+  }
+  // Hanya elemen inputan yang sesuai yang ditampilkan
+  var selectedInput = document.getElementById(inputId);
+  selectedInput.style.display = "block";
+  selectedInput.querySelector(".input1").disabled = false;
+}
+
+var isClickedClaimable = true;
+function disabledClaimInput(inputId) {
+  var selectedInput = document.getElementById(inputId);
+  // var selectedInput = document.getElementById("btn-inv");
 
 
+  if (!isClickedClaimable) {
+    selectedInput.querySelector(".input1").disabled = true;
+    isClickedClaimable = true;
+  } else {
+    selectedInput
+    .querySelector(".input1").disabled = false;
+    isClickedClaimable = false;
+  }
+}
 
+var isClickedNotClaimable = true;
+function disabledNotClaimInput(inputId) {
+  var selectedInput2 = document.getElementById(inputId);
 
-
-
+  if (!isClickedNotClaimable) {
+    selectedInput2.querySelector(".input2").disabled = true;
+    isClickedNotClaimable = true;
+  } else {
+    selectedInput2
+    .querySelector(".input2").disabled = false;
+    isClickedNotClaimable = false;
+  }
+}

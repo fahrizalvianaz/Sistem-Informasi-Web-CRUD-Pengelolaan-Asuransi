@@ -4,10 +4,15 @@
   <li class="divider">/</li>
   <li><a href="#" class="active">Done Surat Tolak</a></li>
 </ul>
+
+
+
 <% let i = 1; if (msg.length !== 0) { %>
 <div class="alert alert-success" role="alert"><%= msg %></div>
-<% } %>
-<div class="info-data table-responsive">
+<% } %> <% let j = 0; status.forEach(element => { %> 
+  <% const statusData = data.filter(element => element.status_done_surat_tolak === status[j]); %>
+<div class="text-start mt-5"><h5><%= status[j] %> <span class="badge bg-secondary"><%= statusData.length %></span></h5></div>
+  <div class="info-data table-responsive">
   <table class="table table-bordered table-container">
     <thead class="table-primary">
       <tr>
@@ -26,12 +31,12 @@
       </tr>
     </thead>
     <tbody>
-      <% data.forEach(element => { %>
+      <%  let totalReserveAmt = 0; statusData.forEach(element => { %>
       <tr>
         <td><%= i %></td>
         <td>
           <a href="#staticBackdrop<%=element._id%>" data-bs-toggle="modal"><%= element.no_klaim %> <i class="bi bi-box-arrow-in-down-right"></i></a>
-          <% if(element.status_done_surat_tolak === "Tunggu 30 hari") {%>
+          <% if(element.status_done_surat_tolak === "Tunggu 30 hari" ) {%>
             <!-- Modal -->
             <div class="modal fade" id="staticBackdrop<%=element._id%>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -136,8 +141,7 @@
                     <% } %>
                     <input class="form-control" id="status" name="status" type="text" hidden value="Pengajuan SPK" />
                     <label for="tanggal_terima_surat_tolak" class="col-form-label">Tanggal Pengajuan SPK</label><br />
-                    <input class="form-control" id="tanggal_kirim_spk" name="tanggal_kirim_spk" placeholder="mm/dd/yyyy" type="date" required />
-                    
+                    <input class="form-control" id="tanggal_kirim_spk" name="tanggal_kirim_spk" placeholder="mm/dd/yyyy" type="date" required />  
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -178,6 +182,7 @@
             </div>
           </div>
         </td>
+        <% const numericValue = parseInt(element.reserve_amt.replace(/[^0-9]/g, "")); %> <% totalReserveAmt = totalReserveAmt + numericValue %>
         <td><%= element.reserve_amt %></td>
         <% const day = element.tanggal_terima_surat_tolak.getDate(); const month = element.tanggal_terima_surat_tolak.getMonth() + 1; const year = element.tanggal_terima_surat_tolak.getFullYear(); const formattedDate =
         `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
@@ -286,5 +291,20 @@
       </tr>
       <% }); %>
     </tbody>
+    <tfoot class="table-warning">
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Rp <%= totalReserveAmt.toLocaleString() %></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tfoot>
   </table>
 </div>
+<% j++ });  %>

@@ -354,7 +354,7 @@ const pengajuanSPK = mongoose.model("pengajuanSPK", {
   },
   tanggal_kirim_spk: {
     type: Date,
-    required: true,
+    required: false,
   },
   status: {
     type: [String],
@@ -640,6 +640,9 @@ const doneSuratTolak = mongoose.model("Done_surat_tolak", {
     type: String,
   },
   aging: {
+    type: String,
+  },
+  no_surat_tolak: {
     type: String,
   },
 });

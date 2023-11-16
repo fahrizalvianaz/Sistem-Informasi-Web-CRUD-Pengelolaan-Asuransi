@@ -1,3 +1,4 @@
+
 <h1 class="title">Investigasi <span class="badge bg-secondary"><%= count %></span></h1>
 <ul class="breadcrumbs">
   <li><a href="#">Investigasi</a></li>
@@ -66,6 +67,7 @@
                     <% for( let i = 0; i < element.status.length; i++ ) { %>
                       <input class="form-control" id="status" name="status" type="text" hidden value="<%= element.status[i] %>" />
                     <% } %>
+                    <input class="form-control" id="status" name="status" type="text" hidden value="Pengajuan SPK" />
                     <input type="hidden" name="status" value="Investigasi & Pembayaran" />
                     <input type="hidden" name="investigator" value="<%= element.investigator %>" />
                     <input type="hidden" name="tanggal_kirim_surat" value="<%= element.tanggal_kirim_surat %>" />
@@ -78,16 +80,26 @@
                     <input type="hidden" name="biaya_akomodasi" value="Rp 0" />
                     <input type="hidden" name="success_fee" value="Rp 0" />
                     <label for="tanggal_feedback" class="col-form-label">Tanggal Terima LHS</label>
-                    <input class="form-control" id="tanggal_terima_lhs" name="tanggal_terima_lhs" type="date" />
-                    <label for="recipient-name" class="col-form-label">Hasil Investigasi</label>              
-                    <div class="input-group mb-3">
-                      <select class="form-select" name="hasil_investigasi" id="hasil_investigasi" required>
-                        <option value="Claimable">Claimable</option>
-                        <option value="Not Claimable">Not Claimable</option>
-                      </select>
+                    <input class="form-control" id="tanggal_terima_lhs" name="tanggal_terima_lhs" type="date" required/>
+                    <label for="recipient-name" class="col-form-label">Hasil Investigasi</label>  
+                    <br>            
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="hasil_investigasi" id="inlineRadio1" value="Claimable" onclick="showInput('input<%=element._id%>1')">
+                      <label class="form-check-label" for="inlineRadio1">Claimable</label>
                     </div>
-                  </div>
-                  <div class="modal-footer">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="hasil_investigasi" id="inlineRadio2" value="Not Claimable" onclick="showInput('input<%=element._id%>2')">
+                      <label class="form-check-label" for="inlineRadio2">Not Claimable</label>
+                    </div>
+                    <div id="input<%=element._id%>1" class="additional-input mt-2">
+                      <label for="tanggal_feedback" class="col-form-label">Tanggal Pengajuan SPK</label>
+                      <input class="form-control input1" id="tanggal_kirim_spk" name="tanggal_kirim_spk" type="date" required />
+                    </div>
+                    <div id="input<%=element._id%>2" class="additional-input mt-2">
+                      <label for="floatingTextarea2">Keterangan</label>
+                      <textarea class="form-control input1" placeholder="Masukkan keterangan..." id="floatingTextarea2" style="height: 100px" name="keterangan_claimclosed" required></textarea>
+                    </div>
+                  <div class="modal-footer mt-3">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save changes</button>
                   </div>
@@ -166,7 +178,7 @@
             <i class="bi bi-pencil"></i>
           </a>
           <% if (element.follow_up_2 != null) { const day2 = element.follow_up_2.getDate(); const month2 = element.follow_up_2.getMonth() + 1; const year2 = element.follow_up_2.getFullYear(); formattedDate2 =
-          `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { const formattedDate2 = "-" } %> <%= formattedDate2 %>
+          `${day2.toString().padStart(2, '0')}-${month2.toString().padStart(2, '0')}-${year2}`; } else { formattedDate2 = "-" } %> <%= formattedDate2 %>
           <!-- Modal -->
           <div class="modal fade" id="fu2Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -180,7 +192,7 @@
                     <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
                     <label for="tanggal_feedback" class="col-form-label"> Follow Up 2</label>
                     <input class="form-control" id="follow_up_2" name="follow_up_2" value="<%= element.follow_up_2 %>" type="date" />
-                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden/>
                     <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
                   </div>
                   <div class="modal-footer">
@@ -197,7 +209,7 @@
             <i class="bi bi-pencil"></i>
           </a>
           <% if (element.follow_up_3 != null) { const day3 = element.follow_up_3.getDate(); const month3 = element.follow_up_3.getMonth() + 1; const year3 = element.follow_up_3.getFullYear();formattedDate3 =
-          `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else { const formattedDate3 = "-" } %> <%= formattedDate3 %>
+          `${day3.toString().padStart(2, '0')}-${month3.toString().padStart(2, '0')}-${year3}`; } else {  formattedDate3 = "-" } %> <%= formattedDate3 %>
           <!-- Modal -->
           <div class="modal fade" id="fu3Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -228,7 +240,7 @@
             <i class="bi bi-pencil"></i>
           </a>
           <% if (element.follow_up_4 != null) { const day4 = element.follow_up_4.getDate(); const month4 = element.follow_up_4.getMonth() + 1; const year4 = element.follow_up_4.getFullYear(); formattedDate4 =
-          `${day4.toString().padStart(2, '0')}-${month4.toString().padStart(2, '0')}-${year4}`; } else { const formattedDate4 = "-" } %> <%= formattedDate4 %>
+          `${day4.toString().padStart(2, '0')}-${month4.toString().padStart(2, '0')}-${year4}`; } else { formattedDate4 = "-" } %> <%= formattedDate4 %>
           <!-- Modal -->
           <div class="modal fade" id="fu4Modal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">

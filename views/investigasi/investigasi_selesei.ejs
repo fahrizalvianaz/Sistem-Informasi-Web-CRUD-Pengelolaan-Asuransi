@@ -61,29 +61,38 @@
           </a>
             <%=element.hasil_investigasi%>
           <!-- Modal -->
-          <div class="modal fade" id="hasilInvestigasiModal<%=element._id%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="/update-hasil-investigasi-selesai?_method=PUT" method="post">
+                <form action="" method="post">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel"><%= element.no_klaim %></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <input type="hidden" name="status" value="<%=element.status[element.status.length - 1]%>" />
-                    <label for="sob" class="col-form-label">Hasil Investigasi</label>
-                    <div class="input-group mb-3">
-                      <select class="form-select" name="hasil_investigasi" id="hasil_investigasi">
-                        <option value="Claimable" <% if(element.hasil_investigasi == "Claimable") {%> selected <%}%> >Claimable</option>
-                        <option value="Not Claimable" <% if(element.hasil_investigasi == "Not Claimable") {%> selected <%}%> >Not Claimable</option>
-                      </select>
-                    </div>
-                    <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
-                    <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    <% if(element.hasil_investigasi === "Claimable") { %>  
+                        <label for="checkboxNoLabel" class="form-check-label">Claimable ? </label> 
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="Claimable" aria-label="Claimable ? " onclick="disabledClaimInput('check1<%element._id%>')">
+                        <div id="check1<%element._id%>" class="check-input">
+                          <label for="tanggal_feedback" class="col-form-label">Tanggal Pengajuan SPK</label>
+                          <input class="form-control input1" id="tanggal_kirim_spk" name="tanggal_kirim_spk" type="date" required disabled/>
+                        </div>
+                      <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                      <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    <% } else {%>
+                      <label for="checkboxNoLabel" class="form-check-label">Not Claimable ? </label> 
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="Not Claimable" aria-label="Not Claimable ? " onclick="disabledNotClaimInput('check2<%element._id%>')">
+                        <div id="check2<%element._id%>" class="check-input">
+                          <label for="floatingTextarea2">Keterangan</label>
+                          <textarea class="form-control input2" placeholder="Masukkan keterangan..." id="floatingTextarea2" style="height: 100px" name="keterangan_claimclosed" required disabled></textarea>
+                        </div>
+                      <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                      <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
+                    <%} %>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer ">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary" id="btn-inv" disabled>Save changes</button>
                   </div>
                 </form>
               </div>
@@ -109,7 +118,9 @@
                       <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="status_claim" style="height: 100px" required><%= element.status_claim %></textarea>
                       <label for="floatingTextarea2">Status Claim</label>
                     </div>
+
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
+                    
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -379,7 +390,8 @@
                     </div>
                     <input class="form-control" id="_id" name="_id" value="<%= element._id %>" hidden />
                     <input class="form-control" id="no_klaim" name="no_klaim" value="<%= element.no_klaim %>" hidden />
-                  </div>
+                    <input class="form-control" id="hasil_investigasi" name="hasil_investigasi" value="<%= element.hasil_investigasi %>" hidden />
+                    </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger">Hapus</button>
