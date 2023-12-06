@@ -5,9 +5,15 @@
   <li><a href="#" class="active">Onprosses</a></li>
 </ul>
 
-<% let getMonthSpkCtl = ""; if (msg.length !== 0) { %>
+<% let getMonthSpkCtl = ""; let uniqueMonths = new Set(); if (msg.length !== 0) { %>
 <div class="alert alert-success" role="alert"><%= msg %></div>
-<% } %> <% let j = 0; tanggalSpkCtl.forEach(element => { %> <% const monthSPKCtl = tanggalSpkCtl[j].getMonth() + 1; const ctlData = spkCtl.filter( element => { const bulan = element.tanggal_kirim_spk_ctl.getMonth() + 1; return `${bulan.toString().padStart(2, '0')}` === `${monthSPKCtl.toString().padStart(2, '0')}`}); %>
+<% } %> 
+
+<% let j = 0; tanggalSpkCtl.forEach(element => { %> 
+  <% const monthSPKCtl = tanggalSpkCtl[j].getMonth() + 1;%>
+  <% if (!uniqueMonths.has(monthSPKCtl)) { %>
+    <% uniqueMonths.add(monthSPKCtl); %>
+  <% const ctlData = spkCtl.filter( element => { const bulan = element.tanggal_kirim_spk_ctl.getMonth() + 1; return `${bulan.toString().padStart(2, '0')}` === `${monthSPKCtl.toString().padStart(2, '0')}`}); %>
 <div class="text-start mt-5">
   <h5>Bulan ke : <%= `${monthSPKCtl.toString().padStart(2, '0')}`; %><span class="badge bg-secondary ms-2"><%= ctlData.length %></span></h5>
 </div>
@@ -280,6 +286,6 @@
       <td></td>
     </tfoot>
   </table>
+ <%}%>
 </div>
-
-<% j++}); %>
+<% j++ }); %>

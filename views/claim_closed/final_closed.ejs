@@ -7,13 +7,15 @@
 
 <hr>
 
-<% let getMonthDdc = ""; if (msg.length !== 0) { %>
+<% let getMonthDdc = ""; let uniqueMonths = new Set(); if (msg.length !== 0) { %>
 <div class="alert alert-success" role="alert"><%= msg %></div>
-<% } %> <% let i = 0; dueDateClosed.forEach(element => { %>
-<% const monthDdc = dueDateClosed[i].getMonth() + 1 ;const ddcData = data.filter(element =>  { const bulan = element.ddc.getMonth() + 1; return `${bulan.toString().padStart(2, '0')}`  === `${monthDdc.toString().padStart(2, '0')}`}); %>
-<% console.log(ddcData) %>
-<div class="text-start mt-5"><h5>Bulan ke : <%= `${monthDdc.toString().padStart(2, '0')}`; %><span class="badge bg-secondary ms-2"><%= ddcData.length %></span></h5></div>
-<div class="info-data table-responsive">
+<% } %> <% let i = 0; dueDateClosed.forEach(element => { %> <% const monthDdc = dueDateClosed[i].getMonth() + 1 ; %> 
+  <% if (!uniqueMonths.has(monthDdc)) { %>
+    <% uniqueMonths.add(monthDdc); %>
+  <% const ddcData = data.filter(element =>  { const bulan = element.ddc.getMonth() + 1; return `${bulan.toString().padStart(2, '0')}`  === `${monthDdc.toString().padStart(2, '0')}`}); %>
+  <% console.log(ddcData) %>
+  <div class="text-start mt-5"><h5>Bulan ke : <%= `${monthDdc.toString().padStart(2, '0')}`; %><span class="badge bg-secondary ms-2"><%= ddcData.length %></span></h5></div>
+  <div class="info-data table-responsive">
    <% if
   (dueDateClosed.length === 0 ) { %>
   <div class="text-center"><h4>Tidak ada data</h4></div>
@@ -135,6 +137,6 @@
         <td></td> 
     </tfoot>
   </table>
-  <% } %>
+  <% } %> <% } %> 
 </div>
 <% i++}); %>

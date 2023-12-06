@@ -1,0 +1,9 @@
+- revisi bulan masih keduplikat di final closed,spk ctl, spk atl
+- tambahan tombol back di halaman add klaim, pengajuan klaim
+- tambah kolom nilai extratia disetujui = nilai spk
+- jika exgratia/ajukan banding diterima, maka diduplikat ke pengajuan spk, jika dipengajuan spk input nilai spk maka otomatis di kearanjang done surat tolak kolom exgratia disetujui otomatis berganti sesuai nilai spk. Jika ditolak maka keduplikat di final closed
+- tambah modal  di keranjang final rejection, ketika no klaim diklik akan memunculkan modal berisi update due date closed, lalu adjust
+- halaman investigasi klik klaim, muncul modal tambahkan checklist ke pla/dla
+- tambah halaman dashboard, table keseluruhan atau overview
+- revisi tunggu closed 30 hari
+- revisi status spgr&lod, hapus pengajuanya
