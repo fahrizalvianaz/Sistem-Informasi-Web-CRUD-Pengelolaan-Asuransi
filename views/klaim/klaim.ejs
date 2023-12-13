@@ -23,6 +23,7 @@
         <th scope="col">No</th>
         <th scope="col">Claim No.</th>
         <th scope="col">Claimant</th>
+        <th scope="col">Branch</th>
         <th scope="col">SOB</th>
         <th scope="col">DOL</th>
         <th scope="col">Reserve Amt</th>
@@ -40,6 +41,7 @@
           <a href="/klaim/<%=element._id%>"><%= element.no_klaim %> <i class="bi bi-box-arrow-in-down-right"></i></a>
         </td>
         <td><%= element.plat_nomor %></td>
+        <td><%= element.branch %></td>
         <td><%=element.sob%></td>
 
         <% const day = element.dol.getDate(); const month = element.dol.getMonth() + 1; const year = element.dol.getFullYear(); const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; %>
