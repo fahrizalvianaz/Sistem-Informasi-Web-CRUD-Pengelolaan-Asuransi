@@ -71,6 +71,8 @@ app.get("/logout", async (req, res) => {
   res.redirect("/");
 });
 
+
+
 // Halaman Klaim
 app.get("/klaim", async (req, res) => {
   const pengajuanklaim = await pengajuanKlaim.find();
@@ -81,6 +83,10 @@ app.get("/klaim", async (req, res) => {
     count,
     msg: req.flash("msg"),
   });
+});
+
+app.post("/batal-klaim", async (req, res) => {
+  res.redirect("/klaim");
 });
 
 app.get("/onprosses-claimclosed", async (req, res) => {

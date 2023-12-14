@@ -1,5 +1,8 @@
 <div class="container-lg mt-4">
   <div class="card shadow-sm">
+    <form action="/batal-klaim" method="post">
+      <button type="submit" class="btn btn-danger mt-2 ms-2" id="tambah">Kembali</button>
+    </form>
     <h4 class="mt-3 text-center">Details Claim</h4>
     <hr style="width: 50%" class="mx-auto p-2" />
     <div class="card-body text-center">
@@ -124,7 +127,7 @@
                 <label for="no-surat-tugas" class="col-form-label">Nomor Surat Tugas</label><br />
                 <input class="form-control" id="nosurattugas" name="nomor_kirim_surat" placeholder="Masukkan no surat tugas..." type="text" required />
               </div>
-              <input class="form-control" id="aging" name="aging" type="number" hidden/>
+              <input class="form-control" id="aging" name="aging" type="number" hidden />
               <input class="form-control" id="status" name="status" type="text" hidden value="<%=klaim.status%>" />
               <input class="form-control" id="status" name="status" type="text" hidden value="Prosses investigasi" />
               <div class="d-grid gap-2">
@@ -192,7 +195,7 @@
                   <input type="hidden" name="our_share" value="Rp 0" />
                   <input type="hidden" name="nilai_salvage" value="Rp 0" />
                   <input type="hidden" name="or" value="Rp 350.000.000" />
-                  <input type="number" name="selisih" value=0  hidden/>
+                  <input type="number" name="selisih" value="0" hidden />
                   <input type="hidden" name="status" value="XOL" />
                   <div class="accordion-body">
                     <div class="mb-3">
