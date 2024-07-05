@@ -34,7 +34,8 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
+const hostname = process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0';
 
 const server = http.createServer(app);
 const __filename = fileURLToPath(import.meta.url);
@@ -2558,6 +2559,6 @@ app.delete("/delete-permanent", (req, res) => {
     });
 });
 
-server.listen(port, () => {
-  console.log("Server running on port 3000");
+server.listen(port, hostname, () => {
+  console.log("Server running on port" + port);
 });
